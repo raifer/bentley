@@ -14,6 +14,32 @@ class Point(object):
 	# end def
 # end class
 
+class Croisement(Point):
+	"""Point avec les segments associé"""
+	def __init__(self, x, y):
+		self.segments = []
+		return Point.__init__(self, x, y)
+	# end def
+# end class
+
+class Evenement(Point):
+	def __gt__(self, eve2):
+		"""Trié par X puis par inverse Y"""
+		# comparaison par abcisse si ordonné identique
+		if self.y == eve2.y:
+			if self.x == eve2.x :
+				# Les deux événements sont au même point
+				# Il faut gérer ici l'ordre si il sont de type diférent
+				return False # temporaire
+			# end if
+			return self.x < eve2.x
+		# end if
+		else:
+			return self.y > eve2.y
+		# end else
+	# end def
+# end class
+
 class Segment(object):
 	def __init__(self, start_x, start_y, end_x, end_y):
 		self.start = Point(start_x, start_y)
@@ -41,3 +67,9 @@ class Segment(object):
 		
 seg = Segment(0,0,0,1)
 print(seg)
+
+eve1 = Evenement(1,1)
+eve2 = Evenement(2, 2)
+print(eve1)
+print(eve2)
+print(eve1 > eve2)
