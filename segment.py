@@ -21,37 +21,18 @@ class Point(object):
 	# end def
 # end class
 
-class Cross(Point):
-	"""Point avec les segments associé"""
-	def __init__(self, x, y, list_seg):
-		if len(list_seg) < 2:
-			raise IOErorr("A cross must be contain at least 2 segments")
-		# end if
-		self.segs = list_seg
-		return Point.__init__(self, x, y)
-	# end def
-	
-	def __repr__(self):
-		txt = "Cross at %.4f : %.4f\nSegments associated :" %(self.x, self.y)
-		for seg in self.segs:
-			txt += "\n" + Segment.__repr__(seg)
-		return txt
-	# end def
-# end class
-
 class Event(Point):
-	def __init__(self, x, y, type, event):
+	def __init__(self, x, y, type):
 		if type not in [CROSS, START, END]: 
 			raise IOError("Event must be associated with a type : CROSS, START or END")
 		# end if
 		self.type = type
-		self.p_event = event
 		return Point.__init__(self, x, y)
 	# end def
 	
 	def __repr__(self):
 		type_name = self.fetch_type_name()
-		return "Event type : " + type_name +"\n" + self.p_event.__repr__() + "\n"
+		return "Event type " + type_name + ". Position : " + Point.__repr__(self)
 	# end def
 	
 	def fetch_type_name(self):
@@ -81,10 +62,28 @@ class Event(Point):
 	# end def
 # end class
 
+class Cross(Event):
+	"""Point avec les segments associé"""
+	def __init__(self, x, y, list_seg=[]):
+		if len(list_seg) < 2:
+			raise IOErorr("A cross must be contain at least 2 segments")
+		# end if
+		self.segs = list_seg
+		return Event.__init__(self, x, y, CROSS)
+	# end def
+	
+	def __repr__(self):
+		txt = "Cross position : %.4f %.4f\n%d segments associated :" %(self.x, self.y, len(self.segs))
+		for seg in self.segs:
+			txt += "\n" + Segment.__repr__(seg)
+		return txt
+	# end def
+# end class
+
 class Segment(object):
 	def __init__(self, start_x, start_y, end_x, end_y):
-		self.start = Point(start_x, start_y)
-		self.end = Point(end_x, end_y)
+		self.start = Event(start_x, start_y, START)
+		self.end = Event(end_x, end_y, END)
 		
 		# Calcul de l'angle
 		# Si segment verticale, on évite la div par 0.
@@ -100,6 +99,6 @@ class Segment(object):
 	# end def
 	
 	def __repr__(self):
-		return "Start : %s\nEnd : %s\nAngle : %.4f radians" %(self.start, self.end, self.angle)
+		return "Start : %.4f %.4f\nEnd : %.4f %.4f\nAngle : %.4f radians" %(self.start.x, self.start.y, self.end.x, self.end.y, self.angle)
 		# end def 
 # end class
