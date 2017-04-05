@@ -8,6 +8,10 @@ class Point(object):
 		self.x = x
 		self.y = y
 	# end def
+	
+	def __repr__(self):
+		return "x= %.4f, y= %.4f" %(self.x, self.y)
+	# end def
 # end class
 
 class Segment(object):
@@ -27,9 +31,13 @@ class Segment(object):
 		# end if
 		#self.angle = ajustage(self.angle)
 	# end def
+	
+	def __repr__(self):
+		return "Start : %s\nEnd : %s\nAngle : %.4f radians" %(self.start, self.end, self.angle)
+		# end def 
 # end class
 
 
 		
 seg = Segment(0,0,0,1)
-print("angle : %.3f" %(seg.angle*1))
+print(seg)
