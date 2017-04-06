@@ -4,6 +4,9 @@ points (any dimension).
 from math import sqrt
 from geo.quadrant import Quadrant
 
+CROSS = 0
+START = 1
+END = 2
 
 class Point:
     """
@@ -19,11 +22,20 @@ class Point:
 
     distance = point1.distance_to(point2)
     """
-    def __init__(self, coordinates):
+    def __init__(self, coordinates, type_eve=None):
         """
         build new point using an array of coordinates.
         """
         self.coordinates = coordinates
+        self.type_eve = type_eve
+
+    @property
+    def x(self):
+        return self.coordinates[0]
+
+    @property
+    def y(self):
+        return self.coordinates[1]
 
     def copy(self):
         """
@@ -67,6 +79,25 @@ class Point:
         strict equality operator
         """
         return self.coordinates == other.coordinates
+
+    def __gt__(self, eve2):
+        """ Trié par (du plus petit au plus grand :
+        y
+        si y identique, inverse de x
+        si x et y identique, on a :
+        croisement < debut < fin
+        Les plus petit événement sont exploités en premier"""
+
+        if self.y > eve2.y: return True
+        if self.y < eve2.y : return False
+        # Si on est encore là, l'ordonné est identique.
+        if self.x < eve2.x : return True
+        if self.x > eve2.x : return False
+        # Si on est encore là, abcisse et ordonné identique
+        if self.type_eve > eve2.type_eve : return True
+        # Si on est encore là, les deux points on exactement la même priorité.
+        return False
+        # end def
 
     def __hash__(self):
         return hash(tuple(self.coordinates))

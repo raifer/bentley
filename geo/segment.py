@@ -31,6 +31,15 @@ class Segment:
         create a segment from an array of two points.
         """
         self.endpoints = points
+        self.__angle__ = None
+
+    @property
+    def start(self):
+        return self.endpoints[0]
+
+    @property
+    def end(self):
+        return self.endpoints[1]
 
     def copy(self):
         """
@@ -65,7 +74,7 @@ class Segment:
             *self.endpoints[0].coordinates,
             *self.endpoints[1].coordinates)
 
-    def intersection_with(self, other):
+    def intersection_with(self, other, adjuster):
         """
         intersect two 2d segments.
         only return point if included on the two segments.
@@ -75,7 +84,7 @@ class Segment:
             return  # parallel lines
 
         if self.contains(i) and other.contains(i):
-            return i
+            return adjuster.hash_point(i)
 
     def line_intersection_with(self, other):
         """
@@ -104,6 +113,12 @@ class Segment:
         """
         distance = sum(possible_point.distance_to(p) for p in self.endpoints)
         return abs(distance - self.length()) < 0.000001
+
+    @property
+    def angle(self):
+        if not self.__angle__:
+            self.__angle__ = (self.end.y - self.start.y) / float((self.end.x - self.start.x))
+        return self.__angle__
 
     def __str__(self):
         return "Segment([" + str(self.endpoints[0]) + ", " + \
