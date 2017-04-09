@@ -1,22 +1,50 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import sys
-import os
+import heapq
 
-from segment import Point, Cross, Event, Segment, CROSS, START, END
+from geo.segment import load_segments
+from geo.tycat import tycat
 
-seg1 = Segment(0,1,2,3)
-print("segment 1 :")
-print(seg1)
-seg2 = Segment(10,11,20,21)
-print("Segment 2 event start:")
-print(seg2.start)
+def bentley(filename):
+    """
+    run bentley ottmann
+    """
+    adjuster, segments = load_segments(filename)
+    events = init(segments)
+    for eve in events :
+        print(eve)
+    # end for
+    tycat(segments)
+    #TODO: merci de completer et de decommenter les lignes suivantes
+    #results = lancer bentley ottmann sur les segments et l'ajusteur
+    #...
+    #tycat(segments, intersections)
+    #print("le nombre d'intersections (= le nombre de points differents) est", ...)
+    #print("le nombre de coupes dans les segments (si un point d'intersection apparait dans
+    # plusieurs segments, il compte plusieurs fois) est", ...)
 
-print("Segment 2 event end:")
-print(seg2.end)
+def init(segments):
+    """
+        Init events heap struct with start and end of each segments
+    """
+    
+    events = []
+    for seg in segments :
+        heapq.heappush(events, seg.endpoints[0])
+        heapq.heappush(events, seg.endpoints[1])
+    # end for
+    return events
+# end def
 
+def main():
+    """
+    launch test on each file.
+    """
+    for filename in sys.argv[1:]:
+        bentley(filename)
+    # end for
+# end def
 
-cr1 = Cross(5, 5, [seg1, seg2])
-print("croisement 1 :")
-print(cr1)
-
+main()
