@@ -3,6 +3,7 @@ segment between two points.
 """
 import struct
 from geo.point import Point
+from geo.point import START, END, CROSS
 from geo.quadrant import Quadrant
 from geo.coordinates_hash import CoordinatesHash
 
@@ -149,7 +150,7 @@ def load_segments(filename):
         packed_segment = bo_file.read(32)
         while packed_segment:
             coordinates = coordinates_struct.unpack(packed_segment)
-            raw_points = [Point(coordinates[0:2]), Point(coordinates[2:])]
+            raw_points = [Point(coordinates[0:2], type_eve = START), Point(coordinates[2:], type_eve = END)]
             adjusted_points = [adjuster.hash_point(p) for p in raw_points]
             segments.append(Segment(adjusted_points))
             packed_segment = bo_file.read(32)
