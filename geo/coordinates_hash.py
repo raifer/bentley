@@ -58,7 +58,7 @@ class CoordinatesHash:
             return point
 
         new_coordinates = [self.__hash_coordinate(c, i) for i, c in enumerate(point.coordinates)]
-        new_point = Point(new_coordinates)
+        new_point = Point(new_coordinates, point.type_eve)
 
         self.fast_hash.add(new_point)
         return new_point
