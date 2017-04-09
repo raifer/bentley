@@ -33,6 +33,13 @@ class Segment:
         self.endpoints = points
         self.__angle__ = None
 
+        if points[0].coordinates[1] == points[1].coordinates[1] :
+            print("segment horizontale")
+            print(self)
+            if points[0].coordinates[0] < points[1].coordinates[0] :
+                raise IOError("Segment avec premier point plus grand que le second")
+            # end if
+        # end if
     @property
     def start(self):
         return self.endpoints[0]
