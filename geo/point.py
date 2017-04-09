@@ -41,7 +41,7 @@ class Point:
         """
         return copy of given point.
         """
-        return Point(list(self.coordinates))
+        return Point(list(self.coordinates), self.type)
 
     def distance_to(self, other):
         """
@@ -130,7 +130,15 @@ class Point:
         """
         print code generating the point.
         """
-        return "Point([" + ', '.join(str(c) for c in self.coordinates) + "])"
+        return "Point([" + ', '.join(str(c) for c in self.coordinates) + "]), type : " + self.fetch_type_name()
 
     def __repr__(self):
-        return "(" + ', '.join(str(c) for c in self.coordinates) + ")"
+        return "(" + ', '.join(str(c) for c in self.coordinates) + "), type : " + self.fetch_type_name()
+        
+    def fetch_type_name(self):
+		        if self.type_eve == CROSS : return "CROSS"
+		        if self.type_eve == START : return "START"
+		        if self.type_eve == END : return "END"
+		        if self.type_eve == None : return "None"
+		        return "Error type"
+	    # end def
