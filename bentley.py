@@ -20,7 +20,7 @@ def bentley(filename):
     events = init_events(segments)
     
     # Création de la liste des segments actifs triés par abscisse.
-    actifs_segments = []
+    alive_segments = []
     
     # Création de la liste des croisements.
     cross_list = []
@@ -40,7 +40,7 @@ def bentley(filename):
     
         g_y = eve.y
         print("Event : %s" %eve)
-        compute_event[eve.type_eve](eve)
+        compute_event[eve.type_eve](eve, alive_segments, cross_list):)
     # end while
     
     print("End Bentley")
@@ -66,9 +66,24 @@ def init_events(segments):
     return events
 # end def
 
-def compute_start_event(eve):
+def compute_start_event(eve, alive_segments, cross_list):
     print("Compute event type START")
+    # Récupération du segment lié au point.
     seg = eve.l_segments[0]
+    
+    # On rend le segment vivant.
+    #######
+    
+    # On recherche les croisement avec les nouveaux voisins.
+    #######
+    # On regarde si les croisements trouvés sont dans la cross_list
+    # Si oui, on met à jour la liste des segments dans le croisement., ce qui metra à jour également l'évènement associé!
+    
+    # Si pas présent:
+    ## on l'ajoute à la cross_list
+    ## Si le croisement est dans le future, on peut aussi l'ajouter à la liste des évènements. 
+    
+    
 # end def
 
 def compute_end_event(eve) :
