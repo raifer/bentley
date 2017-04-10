@@ -22,12 +22,13 @@ class Point:
 
     distance = point1.distance_to(point2)
     """
-    def __init__(self, coordinates, type_eve=None):
+    def __init__(self, coordinates, type_eve=None, l_segments=[]):
         """
         build new point using an array of coordinates.
         """
         self.coordinates = coordinates
         self.type_eve = type_eve
+        self.l_segments = l_segments
 
     @property
     def x(self):
@@ -41,7 +42,7 @@ class Point:
         """
         return copy of given point.
         """
-        return Point(list(self.coordinates), self.type)
+        return Point(list(self.coordinates), self.type, self.l_segments)
 
     def distance_to(self, other):
         """
