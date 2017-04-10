@@ -31,7 +31,8 @@ class Segment:
         """
         create a segment from an array of two points.
         """
-        
+        print(points)
+            
         if points[0].y == points[1].y:
             print("segment horizontale")
             if points[0].x < points[1].x :
@@ -42,7 +43,8 @@ class Segment:
         elif points[0].y > points[1].y :
             raise IOError("Le premier point est plus grand que le second :\n%s\n%s" %(points[0], points[1]))
         # end if
-        
+        points[0].type_eve = START
+        points[1].type_eve = END    
         self.endpoints = points
         # Ajout du pointeur sur le segment dans les points.
         # Permet de remonter au segment à partir de l'eve.
@@ -161,7 +163,7 @@ def load_segments(filename):
         packed_segment = bo_file.read(32)
         while packed_segment:
             coordinates = coordinates_struct.unpack(packed_segment)
-            raw_points = [Point(coordinates[0:2], type_eve = START), Point(coordinates[2:], type_eve = END)]
+            raw_points = [Point(coordinates[0:2]), Point(coordinates[2:])]
             adjusted_points = [adjuster.hash_point(p) for p in raw_points]
             segments.append(Segment(adjusted_points))
             packed_segment = bo_file.read(32)
