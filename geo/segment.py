@@ -31,21 +31,27 @@ class Segment:
         """
         create a segment from an array of two points.
         """
+        
+        if points[0].y == points[1].y:
+            print("segment horizontale")
+            if points[0].x < points[1].x :
+                # Segment avec premier point plus grand que le second
+                print("Segment avec premier point à gauche du second, on inverse")
+                points.reverse()
+            # end if
+        elif points[0].y > points[1].y :
+            raise IOError("Le premier point est plus grand que le second :\n%s\n%s" %(points[0], points[1]))
+        # end if
+        
         self.endpoints = points
         # Ajout du pointeur sur le segment dans les points.
         # Permet de remonter au segment à partir de l'eve.
         self.endpoints[0].l_segments = [self]
         self.endpoints[1].l_segments = [self]
-        
+        # On créer un angle None, il sera calculé à la volé si besoin.
         self.__angle__ = None
+    # end def
 
-        if points[0].coordinates[1] == points[1].coordinates[1] :
-            print("segment horizontale")
-            print(self)
-            if points[0].coordinates[0] < points[1].coordinates[0] :
-                raise IOError("Segment avec premier point plus grand que le second")
-            # end if
-        # end if
     @property
     def start(self):
         return self.endpoints[0]
