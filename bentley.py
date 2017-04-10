@@ -5,6 +5,7 @@ import sys
 import heapq
 
 from geo.segment import load_segments
+from geo.point import CROSS, START, END
 from geo.tycat import tycat
 
 def bentley(filename):
@@ -17,10 +18,19 @@ def bentley(filename):
     
     adjuster, segments = load_segments(filename)
     events = init_events(segments)
+    
     # Création de la liste des segments actifs triés par abscisse.
     actifs_segments = []
+    
     # Création de la liste des croisements.
     cross_list = []
+    
+    # Switch pour les trois type d'évènement
+    compute_event = {
+        START : compute_start_event,
+        END : compute_end_event,
+        CROSS : compute_cross_event
+    } # end dict
     
     while True:
         try :
@@ -29,7 +39,8 @@ def bentley(filename):
             break
     
         g_y = eve.y
-        print(eve)
+        print("Event : %s" %eve)
+        compute_event[eve.type_eve](eve)
     # end while
     
     print("End Bentley")
@@ -55,6 +66,22 @@ def init_events(segments):
     return events
 # end def
 
+def compute_start_event(eve):
+    print("Compute event type START")
+    seg = eve.l_segments[0]
+# end def
+
+def compute_end_event(eve) :
+    print("Compute event type END")
+# end def
+
+def compute_cross_event(eve) :
+    print("Compute event type CROSS")
+    print("nombre de segments : %d" %(len(eve.l_segments)))
+    for seg in eve.l_segments :
+        print(seg)
+# end def
+        
 def main():
     """
     launch test on each file.
