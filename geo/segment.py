@@ -32,6 +32,11 @@ class Segment:
         create a segment from an array of two points.
         """
         self.endpoints = points
+        # Ajout du pointeur sur le segment dans les points.
+        # Permet de remonter au segment à partir de l'eve.
+        self.endpoints[0].l_segments = [self]
+        self.endpoints[1].l_segments = [self]
+        
         self.__angle__ = None
 
         if points[0].coordinates[1] == points[1].coordinates[1] :
