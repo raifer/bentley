@@ -28,6 +28,7 @@ class Segment:
         intersection = segment1.intersection_with(segment2)
 
     """
+
     def __init__(self, points):
         """
         create a segment from an array of two points.
@@ -36,13 +37,13 @@ class Segment:
 
         if points[0].y == points[1].y:
             print("segment horizontale")
-            if points[0].x < points[1].x :
+            if points[0].x < points[1].x:
                 # Segment avec premier point plus grand que le second
                 print("Segment avec premier point à gauche du second, on inverse")
                 points.reverse()
-            # end if
-        elif points[0].y > points[1].y :
-            raise IOError("Le premier point est plus grand que le second :\n%s\n%s" %(points[0], points[1]))
+                # end if
+        elif points[0].y > points[1].y:
+            raise IOError("Le premier point est plus grand que le second :\n%s\n%s" % (points[0], points[1]))
         # end if
         points[0].type_eve = START
         points[1].type_eve = END
@@ -53,6 +54,7 @@ class Segment:
         self.endpoints[1].l_segments = [self]
         # On créer un angle None, il sera calculé à la volé si besoin.
         self.__angle__ = None
+
     # end def
 
     @property
@@ -66,13 +68,17 @@ class Segment:
     def __gt__(self, other):
         y = y_cord.y
 
-        pente1 = (self.end.x - self.start.x)/(self.end.y - self.start.y)
-        x1 = self.start.x + pente1*(y - self.start.y)
-        pente2 = (other.end.x - other.start.x)/(other.end.y - other.start.y)
-        x2 = other.start.x + pente2*(y - other.start.y)
+        pente1 = (self.end.x - self.start.x) / (self.end.y - self.start.y)
+        x1 = self.start.x + pente1 * (y - self.start.y)
+        pente2 = (other.end.x - other.start.x) / (other.end.y - other.start.y)
+        x2 = other.start.x + pente2 * (y - other.start.y)
 
-        return x1 > x2
+        if x1 != x2:
+            return x1 > x2
 
+        else:
+            # Si on est au niveau d'une intersection, on compare les angles.
+            return self.angle > other.angle
 
     def copy(self):
         """
@@ -155,11 +161,11 @@ class Segment:
 
     def __str__(self):
         return "Segment([" + str(self.endpoints[0]) + ", " + \
-            str(self.endpoints[1]) + "])"
+               str(self.endpoints[1]) + "])"
 
     def __repr__(self):
         return "[" + repr(self.endpoints[0]) + ", " + \
-            repr(self.endpoints[1]) + "])"
+               repr(self.endpoints[1]) + "])"
 
 
 def load_segments(filename):
