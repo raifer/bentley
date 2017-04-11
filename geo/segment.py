@@ -54,6 +54,7 @@ class Segment:
         self.endpoints[1].l_segments = [self]
         # On créer un angle None, il sera calculé à la vollée si besoin.
         self.__angle__ = None
+        self.before_cross = False
 
     # end def
 
@@ -67,17 +68,24 @@ class Segment:
 
     def __gt__(self, other):
         y = y_cord.y
+        print(self.angle, other.angle)
 
         pente1 = (self.end.x - self.start.x) / (self.end.y - self.start.y)
         x1 = self.start.x + pente1 * (y - self.start.y)
         pente2 = (other.end.x - other.start.x) / (other.end.y - other.start.y)
         x2 = other.start.x + pente2 * (y - other.start.y)
 
-        if x1 != x2:
+        if abs(x1 - x2) > 0.000001:
             return x1 > x2
 
+        elif self.before_cross:
+            print("wha", self.angle < other.angle)
+            return self.angle < other.angle
+
         else:
-            # Si on est au niveau d'une intersection, on compare les angles.
+            # Si les deux abscisses sont suffisamment proches, on est au niveau d'une intersection. On compare donc les
+            # angles.
+            print("whoo")
             return self.angle > other.angle
 
     def copy(self):
@@ -159,7 +167,7 @@ class Segment:
     @property
     def angle(self):
         if not self.__angle__:
-            self.__angle__ = (self.end.y - self.start.y) / float((self.end.x - self.start.x))
+            self.__angle__ = (self.end.x - self.start.x) / float((self.end.y - self.start.y))
         return self.__angle__
 
     def __str__(self):

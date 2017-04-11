@@ -8,6 +8,7 @@ CROSS = 0
 START = 1
 END = 2
 
+
 class Point:
     """
     a point is defined as a vector of any given dimension.
@@ -22,10 +23,13 @@ class Point:
 
     distance = point1.distance_to(point2)
     """
-    def __init__(self, coordinates, type_eve=None, l_segments=[]):
+
+    def __init__(self, coordinates, type_eve=None, l_segments=None):
         """
         build new point using an array of coordinates.
         """
+        if l_segments is None:
+            l_segments = []
         self.coordinates = coordinates
         self.type_eve = type_eve
         self.l_segments = l_segments
@@ -42,7 +46,7 @@ class Point:
         """
         return copy of given point.
         """
-        return Point(list(self.coordinates), self.type, self.l_segments)
+        return Point(list(self.coordinates), self.type_eve, self.l_segments)
 
     def distance_to(self, other):
         """
@@ -73,7 +77,7 @@ class Point:
         """
         x_1, y_1 = self.coordinates
         x_2, y_2 = other.coordinates
-        return -y_1*x_2 + x_1*y_2
+        return -y_1 * x_2 + x_1 * y_2
 
     def __eq__(self, other):
         """
@@ -90,12 +94,12 @@ class Point:
         Les plus petit événement sont exploités en premier"""
 
         if self.y > eve2.y: return True
-        if self.y < eve2.y : return False
+        if self.y < eve2.y: return False
         # Si on est encore là, l'ordonné est identique.
-        if self.x < eve2.x : return True
-        if self.x > eve2.x : return False
+        if self.x < eve2.x: return True
+        if self.x > eve2.x: return False
         # Si on est encore là, abcisse et ordonné identique
-        if self.type_eve > eve2.type_eve : return True
+        if self.type_eve > eve2.type_eve: return True
         # Si on est encore là, les deux points on exactement la même priorité.
         return False
         # end def
@@ -119,13 +123,13 @@ class Point:
         """
         multiplication by scalar operator. (useful for scaling)
         """
-        return Point([c*factor for c in self.coordinates])
+        return Point([c * factor for c in self.coordinates])
 
     def __truediv__(self, factor):
         """
         division by scalar operator. (useful for scaling)
         """
-        return Point([c/factor for c in self.coordinates])
+        return Point([c / factor for c in self.coordinates])
 
     def __str__(self):
         """
@@ -135,11 +139,11 @@ class Point:
 
     def __repr__(self):
         return "(" + ', '.join(str(c) for c in self.coordinates) + "), type : " + self.fetch_type_name()
-        
+
     def fetch_type_name(self):
-		        if self.type_eve == CROSS : return "CROSS"
-		        if self.type_eve == START : return "START"
-		        if self.type_eve == END : return "END"
-		        if self.type_eve == None : return "None"
-		        return "Error type"
-	    # end def
+        if self.type_eve == CROSS: return "CROSS"
+        if self.type_eve == START: return "START"
+        if self.type_eve == END: return "END"
+        if self.type_eve == None: return "None"
+        return "Error type"
+        # end def

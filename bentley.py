@@ -48,10 +48,10 @@ class Bentley(object):
 
                 # On déplace la droite d'étude.
             y_cord.y = eve.y
-
             print("\nNew event : %s" % eve)
             # On apelle une des trois fonction celon le type d'évènement.
             self.compute_event[eve.type_eve](eve)
+            print(self.alive_segments)
             # end while
 
     # end def
@@ -110,24 +110,47 @@ class Bentley(object):
     # end def
 
     def compute_cross_event(self, eve):
+
+        print("Compute event type CROSS")
+
         seg1 = eve.l_segments[0]
         seg2 = eve.l_segments[1]
 
+        # À ce moment-ci, la liste des segments vivants n'est pas ordonnée puisque les deux segments se croisant
+        # n'ont pas encore été intervertis. Cela est problématique puisque l'on ne peut pas utiliser la fonction
+        # "index" avec une liste désordonnée. On utilise donc le booléen "before_cross" qui indiquent aux segments
+        # que leur fonction __gt__ doit renvoyer le contraire de ce qu'elle renverrait normalement. En d'autres
+        # termes, pour trouver l'indice des segments dans liste désordonnée, il faut indiquer que l'on effectue les
+        # comparaisons entre segments avant l'intersection.
+
+        seg1.before_cross = True
+        seg2.before_cross = True
+
+        print("lou")
         i1 = self.alive_segments.index(seg1)
+        print("li")
         i2 = self.alive_segments.index(seg2)
+        print("la")
+
+        seg1.before_cross = False
+        seg2.before_cross = False
 
         if abs(i1 - i2) != 1:
             raise IOError("Les deux segments ne sont pas voisins.")
 
+        print("hip")
         self.alive_segments[i1], self.alive_segments[i2] = self.alive_segments[i2], self.alive_segments[i1]
+        print("hop")
 
         # On effecture les comparaisons avec les nouveaux voisins
         i_gauche = min(i1, i2)
         i_droite = max(i1, i2)
+
         segment_gauche = self.alive_segments[i_gauche]
         segment_droite = self.alive_segments[i_droite]
 
         if i_gauche > 0:
+            print("what")
             segment_gauche_gauche = self.alive_segments[i_gauche - 1]
             cross = segment_gauche.intersection_with(segment_gauche_gauche)
             if cross:
@@ -136,6 +159,7 @@ class Bentley(object):
                     heapq.heappush(self.events, cross)
 
         if i_droite < len(self.alive_segments) - 1:
+            print("well")
             segment_droite_droite = self.alive_segments[i_droite + 1]
             cross = segment_droite.intersection_with(segment_droite_droite)
             if cross:
