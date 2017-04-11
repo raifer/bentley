@@ -6,6 +6,7 @@ from geo.point import Point
 from geo.point import START, END, CROSS
 from geo.quadrant import Quadrant
 from geo.coordinates_hash import CoordinatesHash
+import y_cord
 
 
 class Segment:
@@ -32,7 +33,7 @@ class Segment:
         create a segment from an array of two points.
         """
         print(points)
-            
+
         if points[0].y == points[1].y:
             print("segment horizontale")
             if points[0].x < points[1].x :
@@ -44,7 +45,7 @@ class Segment:
             raise IOError("Le premier point est plus grand que le second :\n%s\n%s" %(points[0], points[1]))
         # end if
         points[0].type_eve = START
-        points[1].type_eve = END    
+        points[1].type_eve = END
         self.endpoints = points
         # Ajout du pointeur sur le segment dans les points.
         # Permet de remonter au segment à partir de l'eve.
@@ -61,6 +62,17 @@ class Segment:
     @property
     def end(self):
         return self.endpoints[1]
+
+    def __gt__(self, other):
+        y = y_cord.y
+
+        pente1 = (self.end.x - self.start.x)/(self.end.y - self.start.y)
+        x1 = self.start.x + pente1*(y - self.start.y)
+        pente2 = (other.end.x - other.start.x)/(other.end.y - other.start.y)
+        x2 = other.start.x + pente2*(y - other.start.y)
+
+        return x1 > x2
+
 
     def copy(self):
         """
