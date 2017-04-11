@@ -107,6 +107,7 @@ class Bentley(object):
                 if cross > eve:
                     heapq.heappush(self.events, cross)
 
+        self.alive_segments.pop(i)
     # end def
 
     def compute_cross_event(self, eve):
