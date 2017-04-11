@@ -52,7 +52,7 @@ class Segment:
         # Permet de remonter au segment à partir de l'eve.
         self.endpoints[0].l_segments = [self]
         self.endpoints[1].l_segments = [self]
-        # On créer un angle None, il sera calculé à la volé si besoin.
+        # On créer un angle None, il sera calculé à la vollée si besoin.
         self.__angle__ = None
 
     # end def
@@ -113,7 +113,7 @@ class Segment:
             *self.endpoints[0].coordinates,
             *self.endpoints[1].coordinates)
 
-    def intersection_with(self, other, adjuster):
+    def intersection_with(self, other):
         """
         intersect two 2d segments.
         only return point if included on the two segments.
@@ -123,7 +123,10 @@ class Segment:
             return  # parallel lines
 
         if self.contains(i) and other.contains(i):
-            return adjuster.hash_point(i)
+            # On crée un Point de type CROSS
+            intersection = Point(i.coordinates, type_eve=CROSS)
+            intersection.l_segments = [self, other]
+            return intersection
 
     def line_intersection_with(self, other):
         """

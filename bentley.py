@@ -151,7 +151,6 @@ def main():
     """
     launch test on each file.
     """
-    y_cord.init()
     for filename in sys.argv[1:]:
         bentley = Bentley(filename)
         bentley.run()
