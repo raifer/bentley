@@ -127,11 +127,8 @@ class Bentley(object):
         seg1.before_cross = True
         seg2.before_cross = True
 
-        print("lou")
         i1 = self.alive_segments.index(seg1)
-        print("li")
         i2 = self.alive_segments.index(seg2)
-        print("la")
 
         seg1.before_cross = False
         seg2.before_cross = False
@@ -139,9 +136,7 @@ class Bentley(object):
         if abs(i1 - i2) != 1:
             raise IOError("Les deux segments ne sont pas voisins.")
 
-        print("hip")
         self.alive_segments[i1], self.alive_segments[i2] = self.alive_segments[i2], self.alive_segments[i1]
-        print("hop")
 
         # On effecture les comparaisons avec les nouveaux voisins
         i_gauche = min(i1, i2)
@@ -151,7 +146,6 @@ class Bentley(object):
         segment_droite = self.alive_segments[i_droite]
 
         if i_gauche > 0:
-            print("what")
             segment_gauche_gauche = self.alive_segments[i_gauche - 1]
             cross = segment_gauche.intersection_with(segment_gauche_gauche)
             if cross:
@@ -160,7 +154,6 @@ class Bentley(object):
                     heapq.heappush(self.events, cross)
 
         if i_droite < len(self.alive_segments) - 1:
-            print("well")
             segment_droite_droite = self.alive_segments[i_droite + 1]
             cross = segment_droite.intersection_with(segment_droite_droite)
             if cross:

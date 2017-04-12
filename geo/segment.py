@@ -79,13 +79,11 @@ class Segment:
             return x1 > x2
 
         elif self.before_cross:
-            print("wha", self.angle < other.angle)
             return self.angle < other.angle
 
         else:
             # Si les deux abscisses sont suffisamment proches, on est au niveau d'une intersection. On compare donc les
             # angles.
-            print("whoo")
             return self.angle > other.angle
 
     def copy(self):
