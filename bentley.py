@@ -49,10 +49,12 @@ class Bentley(object):
                 # On déplace la droite d'étude.
             y_cord.y = eve.y
             print("\nNew event : %s" % eve)
-            # On apelle une des trois fonction celon le type d'évènement.
+            # On apelle une des trois fonction selon le type d'évènement.
             self.compute_event[eve.type_eve](eve)
             print(self.alive_segments)
             # end while
+
+        return self.cross_list
 
     # end def
 
@@ -69,24 +71,24 @@ class Bentley(object):
         # cross_list Si oui, on met à jour la liste des segments dans le croisement., ce qui mettra à jour également
         # l'évènement associé!
 
-        # Si pas présent:
-        # on l'ajoute à la cross_list
-        # Si le croisement est dans le future, on peut aussi l'ajouter à la liste des évènements.
-
         if i > 0:
+            # Si le segment n'est pas tout à gauche, on cherche un croisement potentiel avec son voisin de gauche.
             segment_gauche = self.alive_segments[i - 1]
             cross = seg.intersection_with(segment_gauche)
-            if cross:
+
+            if cross and cross not in self.cross_list:
+                # Si le croisement n'est pas présent, on l'ajoute à la liste
                 self.cross_list.append(cross)
                 if cross > eve:
-                    # Si le croisement est au dessus de l'événement actuel, on l'ajoute à la liste
-                    # des événements
+                    # Si le croisement est dans le future, on peut l'ajoute aussi aux événements
                     heapq.heappush(self.events, cross)
 
         if i < len(self.alive_segments) - 1:
+            # De même avec le voisin de droite.
             segment_droite = self.alive_segments[i + 1]
             cross = seg.intersection_with(segment_droite)
-            if cross:
+
+            if cross and cross not in self.cross_list:
                 self.cross_list.append(cross)
                 if cross > eve:
                     heapq.heappush(self.events, cross)
@@ -97,7 +99,10 @@ class Bentley(object):
         print("Compute event type END")
         seg = eve.l_segments[0]
         i = self.alive_segments.index(seg)
+
         if 0 < i < len(self.alive_segments) - 1:
+            # Si le segment qui se termine se trouvait entre deux segments, on cherche un croisement potentiel entre
+            # ces deux segments
             seg_gauche = self.alive_segments[i - 1]
             seg_droite = self.alive_segments[i + 1]
 
@@ -107,6 +112,7 @@ class Bentley(object):
                 if cross > eve:
                     heapq.heappush(self.events, cross)
 
+        # On retire le segment qui vient de se terminer de la liste des segments vivants
         self.alive_segments.pop(i)
     # end def
 
@@ -114,6 +120,7 @@ class Bentley(object):
 
         print("Compute event type CROSS")
 
+        # On récupère les deux segments qui se croisent à partir de l'événement.
         seg1 = eve.l_segments[0]
         seg2 = eve.l_segments[1]
 
@@ -136,9 +143,10 @@ class Bentley(object):
         if abs(i1 - i2) != 1:
             raise IOError("Les deux segments ne sont pas voisins.")
 
+        # On inverse les positions des deux segments qui se croisent
         self.alive_segments[i1], self.alive_segments[i2] = self.alive_segments[i2], self.alive_segments[i1]
 
-        # On effecture les comparaisons avec les nouveaux voisins
+        # On cherche les potentiels croisements avec les nouveaux voisins des deux segments qui viennent de se croiser
         i_gauche = min(i1, i2)
         i_droite = max(i1, i2)
 
@@ -148,7 +156,7 @@ class Bentley(object):
         if i_gauche > 0:
             segment_gauche_gauche = self.alive_segments[i_gauche - 1]
             cross = segment_gauche.intersection_with(segment_gauche_gauche)
-            if cross:
+            if cross and cross not in self.cross_list:
                 self.cross_list.append(cross)
                 if cross > eve:
                     heapq.heappush(self.events, cross)
@@ -156,7 +164,7 @@ class Bentley(object):
         if i_droite < len(self.alive_segments) - 1:
             segment_droite_droite = self.alive_segments[i_droite + 1]
             cross = segment_droite.intersection_with(segment_droite_droite)
-            if cross:
+            if cross and cross not in self.cross_list:
                 self.cross_list.append(cross)
                 if cross > eve:
                     heapq.heappush(self.events, cross)
@@ -171,7 +179,7 @@ def main():
     """
     for filename in sys.argv[1:]:
         bentley = Bentley(filename)
-        bentley.run()
+        print(bentley.run())
         # end for
 
 
