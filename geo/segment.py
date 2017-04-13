@@ -52,7 +52,7 @@ class Segment:
         # Permet de remonter au segment à partir de l'eve.
         self.endpoints[0].l_segments = [self]
         self.endpoints[1].l_segments = [self]
-        # On créer un angle None, il sera calculé à la vollée si besoin.
+        # On crée un angle None, il sera calculé à la volée si besoin.
         self.__angle__ = None
         self.before_cross = False
 
