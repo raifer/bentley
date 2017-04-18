@@ -8,6 +8,7 @@ from geo.quadrant import Quadrant
 from geo.coordinates_hash import CoordinatesHash
 import y_cord
 from math import inf
+from functools import total_ordering
 
 
 class Segment:
@@ -45,7 +46,8 @@ class Segment:
                 points.reverse()
                 # end if
         elif points[0].y > points[1].y:
-            raise IOError("Le premier point est plus grand que le second :\n%s\n%s" % (points[0], points[1]))
+            # On met le segment dans le "bon sens"
+            points[0], points[1] = points[1], points[0]
         # end if
         points[0].type_eve = START
         points[1].type_eve = END
@@ -201,3 +203,7 @@ def load_segments(filename):
             packed_segment = bo_file.read(32)
 
     return adjuster, segments
+
+
+# La ligne suivante définit automatiquement les méthodes de comparaisons (__eq__, __lt__, etc.) pour la classe Segment
+Segment = total_ordering(Segment)
