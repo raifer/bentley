@@ -54,7 +54,7 @@ class Bentley(object):
             print(self.alive_segments)
             # end while
 
-        return self.cross_list
+        return self.segments, self.cross_list
 
     # end def
 
@@ -87,8 +87,8 @@ class Bentley(object):
             # De même avec le voisin de droite.
             segment_droite = self.alive_segments[i + 1]
             cross = seg.intersection_with(segment_droite)
-
             if cross and cross not in self.cross_list:
+                print(cross)
                 self.cross_list.append(cross)
                 if cross > eve:
                     heapq.heappush(self.events, cross)
@@ -156,6 +156,7 @@ class Bentley(object):
         if i_gauche > 0:
             segment_gauche_gauche = self.alive_segments[i_gauche - 1]
             cross = segment_gauche.intersection_with(segment_gauche_gauche)
+
             if cross and cross not in self.cross_list:
                 self.cross_list.append(cross)
                 if cross > eve:
@@ -164,12 +165,13 @@ class Bentley(object):
         if i_droite < len(self.alive_segments) - 1:
             segment_droite_droite = self.alive_segments[i_droite + 1]
             cross = segment_droite.intersection_with(segment_droite_droite)
+
             if cross and cross not in self.cross_list:
                 self.cross_list.append(cross)
                 if cross > eve:
                     heapq.heappush(self.events, cross)
 
-                    # end def
+    # end def
 
 
 # end class
@@ -179,7 +181,10 @@ def main():
     """
     for filename in sys.argv[1:]:
         bentley = Bentley(filename)
-        print(bentley.run())
+        print("segments :", bentley.segments)
+        tycat(bentley.segments)
+        segments, intersections = bentley.run()
+        tycat(segments, intersections)
         # end for
 
 
