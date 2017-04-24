@@ -54,7 +54,7 @@ class Bentley(object):
             print(self.alive_segments)
             # end while
 
-        return self.cross_list
+        return self.segments, self.cross_list
 
     # end def
 
@@ -179,13 +179,18 @@ def main():
     """
     for filename in sys.argv[1:]:
         bentley = Bentley(filename)
-        print(bentley.run())
+        tycat(bentley.segments)
+        segments, intersections = bentley.run()
+        tycat(segments)
+        tycat(segments, intersections)
         # end for
 
 
 # end def
 
-main()
+if __name__ == '__main__':
+    main()
+
 # tycat(segments)
 # TODO: merci de completer et de decommenter les lignes suivantes
 # results = lancer bentley ottmann sur les segments et l'ajusteur
