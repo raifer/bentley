@@ -81,7 +81,7 @@ class Bentley(object):
                 # Si le croisement n'est pas présent, on l'ajoute à la liste
                 self.cross_set.add(cross)
                 if cross > eve:
-                    # Si le croisement est dans le future, on peut l'ajoute aussi aux événements
+                    # Si le croisement est dans le futur, on l'ajoute aussi aux événements
                     heapq.heappush(self.events, cross)
 
         if i < len(self.alive_segments) - 1:
