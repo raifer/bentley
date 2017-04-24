@@ -36,8 +36,8 @@ class Bentley(object):
         # Création de la liste des segments actifs triés par abscisse.
         self.alive_segments = SortedList()
 
-        # Création de la liste des croisements.
-        self.cross_list = []
+        # Création du set des croisements.
+        self.cross_set = set()
 
     def run(self):
         while True:
@@ -54,7 +54,7 @@ class Bentley(object):
             print(self.alive_segments)
             # end while
 
-        return self.segments, self.cross_list
+        return self.segments, self.cross_set
 
     # end def
 
@@ -69,7 +69,7 @@ class Bentley(object):
         self.alive_segments.insert(i, seg)
 
         # On recherche les croisement avec les nouveaux voisins. On regarde si les croisements trouvés sont dans la
-        # cross_list Si oui, on met à jour la liste des segments dans le croisement., ce qui mettra à jour également
+        # cross_set Si oui, on met à jour la liste des segments dans le croisement., ce qui mettra à jour également
         # l'évènement associé!
 
         if i > 0:
@@ -77,9 +77,9 @@ class Bentley(object):
             segment_gauche = self.alive_segments[i - 1]
             cross = seg.intersection_with(segment_gauche)
 
-            if cross and cross not in self.cross_list:
+            if cross and cross not in self.cross_set:
                 # Si le croisement n'est pas présent, on l'ajoute à la liste
-                self.cross_list.append(cross)
+                self.cross_set.add(cross)
                 if cross > eve:
                     # Si le croisement est dans le future, on peut l'ajoute aussi aux événements
                     heapq.heappush(self.events, cross)
@@ -88,9 +88,9 @@ class Bentley(object):
             # De même avec le voisin de droite.
             segment_droite = self.alive_segments[i + 1]
             cross = seg.intersection_with(segment_droite)
-            if cross and cross not in self.cross_list:
+            if cross and cross not in self.cross_set:
                 print(cross)
-                self.cross_list.append(cross)
+                self.cross_set.add(cross)
                 if cross > eve:
                     heapq.heappush(self.events, cross)
 
@@ -108,8 +108,8 @@ class Bentley(object):
             seg_droite = self.alive_segments[i + 1]
 
             cross = seg_gauche.intersection_with(seg_droite)
-            if cross and cross not in self.cross_list:
-                self.cross_list.append(cross)
+            if cross and cross not in self.cross_set:
+                self.cross_set.add(cross)
                 if cross > eve:
                     heapq.heappush(self.events, cross)
 
@@ -158,8 +158,8 @@ class Bentley(object):
             segment_gauche_gauche = self.alive_segments[i_gauche - 1]
             cross = segment_gauche.intersection_with(segment_gauche_gauche)
 
-            if cross and cross not in self.cross_list:
-                self.cross_list.append(cross)
+            if cross and cross not in self.cross_set:
+                self.cross_set.add(cross)
                 if cross > eve:
                     heapq.heappush(self.events, cross)
 
@@ -167,8 +167,8 @@ class Bentley(object):
             segment_droite_droite = self.alive_segments[i_droite + 1]
             cross = segment_droite.intersection_with(segment_droite_droite)
 
-            if cross and cross not in self.cross_list:
-                self.cross_list.append(cross)
+            if cross and cross not in self.cross_set:
+                self.cross_set.add(cross)
                 if cross > eve:
                     heapq.heappush(self.events, cross)
 
@@ -186,6 +186,7 @@ def main():
         tycat(bentley.segments)
         segments, intersections = bentley.run()
         tycat(segments, intersections)
+        print(intersections)
         # end for
 
 
