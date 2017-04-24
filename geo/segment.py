@@ -7,6 +7,8 @@ from geo.point import START, END, CROSS
 from geo.quadrant import Quadrant
 from geo.coordinates_hash import CoordinatesHash
 import y_cord
+from math import inf
+from functools import total_ordering
 
 
 class Segment:
@@ -36,14 +38,16 @@ class Segment:
         print(points)
 
         if points[0].y == points[1].y:
-            print("segment horizontale")
+            # Si le segment est horizontal, on l'incline légèrement pour se simplifier la vie.
+            points[0].coordinates[1] += 0.000001
             if points[0].x < points[1].x:
                 # Segment avec premier point plus grand que le second
                 print("Segment avec premier point à gauche du second, on inverse")
                 points.reverse()
                 # end if
         elif points[0].y > points[1].y:
-            raise IOError("Le premier point est plus grand que le second :\n%s\n%s" % (points[0], points[1]))
+            # On met le segment dans le "bon sens"
+            points[0], points[1] = points[1], points[0]
         # end if
         points[0].type_eve = START
         points[1].type_eve = END
@@ -68,8 +72,6 @@ class Segment:
 
     def __gt__(self, other):
         y = y_cord.y
-        print(self.angle, other.angle)
-
         pente1 = (self.end.x - self.start.x) / (self.end.y - self.start.y)
         x1 = self.start.x + pente1 * (y - self.start.y)
         pente2 = (other.end.x - other.start.x) / (other.end.y - other.start.y)
@@ -165,7 +167,12 @@ class Segment:
     @property
     def angle(self):
         if not self.__angle__:
-            self.__angle__ = (self.end.x - self.start.x) / float((self.end.y - self.start.y))
+            if self.end.y != self.start.y:
+                self.__angle__ = (self.end.x - self.start.x) / float((self.end.y - self.start.y))
+            elif self.start.x > self.end.x:
+                self.__angle__ = inf
+            else:
+                self.__angle__ = -inf
         return self.__angle__
 
     def __str__(self):
@@ -196,3 +203,7 @@ def load_segments(filename):
             packed_segment = bo_file.read(32)
 
     return adjuster, segments
+
+
+# La ligne suivante définit automatiquement les méthodes de comparaisons (__eq__, __lt__, etc.) pour la classe Segment
+Segment = total_ordering(Segment)

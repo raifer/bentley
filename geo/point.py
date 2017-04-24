@@ -103,7 +103,6 @@ class Point:
         if self.type_eve > other.type_eve: return True
         # Si on est encore là, les deux points on exactement la même priorité.
         return False
-        # end def
 
     def __hash__(self):
         return hash(tuple(self.coordinates))
