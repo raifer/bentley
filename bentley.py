@@ -3,7 +3,7 @@
 
 import sys
 import heapq
-import y_cord
+import global_eve
 from sortedcontainers import SortedList
 
 from geo.segment import load_segments
@@ -51,15 +51,17 @@ class Bentley(object):
                 break
 
                 # On déplace la droite d'étude.
-            y_cord.y = eve.y
+            global_eve.eve = eve
             print("\nNew event : %s" % eve)
             # On apelle une des trois fonction selon le type d'évènement.
             try:
                 self.compute_event[eve.type_eve](eve)
             except:
                 print("Unexpected error", sys.exc_info()[0])
-                tycat(self.segments, self.cross_set_complet)
-                print(self.alive_segments)
+                #tycat(eve.l_segments)
+                tycat(self.segments)
+                print("SETS", self.cross_set_complet - self.cross_set)
+                #tycat(self.alive_segments)
 
                 raise
             # print(self.alive_segments)
@@ -92,9 +94,9 @@ class Bentley(object):
                 if pas_contact:
                     # Si le croisement n'est pas présent, on l'ajoute à la liste
                     self.cross_set.add(cross)
-                if cross > eve:
-                    # Si le croisement est dans le futur, on l'ajoute aussi aux événements
-                    heapq.heappush(self.events, cross)
+                    if cross > eve:
+                        # Si le croisement est dans le futur, on l'ajoute aussi aux événements
+                        heapq.heappush(self.events, cross)
 
         if i < len(self.alive_segments) - 1:
             # De même avec le voisin de droite.
@@ -106,9 +108,9 @@ class Bentley(object):
                 if pas_contact:
                     # Si le croisement n'est pas présent, on l'ajoute à la liste
                     self.cross_set.add(cross)
-                if cross > eve:
-                    # Si le croisement est dans le futur, on l'ajoute aussi aux événements
-                    heapq.heappush(self.events, cross)
+                    if cross > eve:
+                        # Si le croisement est dans le futur, on l'ajoute aussi aux événements
+                        heapq.heappush(self.events, cross)
 
     # end def
 
@@ -116,7 +118,13 @@ class Bentley(object):
         print("Compute event type END")
 
         seg = eve.l_segments[0]
+
+        if seg.est_horizontal:
+            seg.__current_x__ = eve.x
+
+        seg.before_cross = True
         i = self.alive_segments.index(seg)
+        seg.before_cross = False
 
         if 0 < i < len(self.alive_segments) - 1:
             # Si le segment qui se termine se trouvait entre deux segments, on cherche un croisement potentiel entre
@@ -130,9 +138,9 @@ class Bentley(object):
                 if pas_contact:
                     # Si le croisement n'est pas présent, on l'ajoute à la liste
                     self.cross_set.add(cross)
-                if cross > eve:
-                    # Si le croisement est dans le futur, on l'ajoute aussi aux événements
-                    heapq.heappush(self.events, cross)
+                    if cross > eve:
+                        # Si le croisement est dans le futur, on l'ajoute aussi aux événements
+                        heapq.heappush(self.events, cross)
 
         # On retire le segment qui vient de se terminer de la liste des segments vivants
         self.alive_segments.pop(i)
@@ -191,9 +199,9 @@ class Bentley(object):
                 if pas_contact:
                     # Si le croisement n'est pas présent, on l'ajoute à la liste
                     self.cross_set.add(cross)
-                if cross > eve:
-                    # Si le croisement est dans le futur, on l'ajoute aussi aux événements
-                    heapq.heappush(self.events, cross)
+                    if cross > eve:
+                        # Si le croisement est dans le futur, on l'ajoute aussi aux événements
+                        heapq.heappush(self.events, cross)
 
         if i_droite < len(self.alive_segments) - 1:
             segment_droite_droite = self.alive_segments[i_droite + 1]
@@ -204,9 +212,9 @@ class Bentley(object):
                 if pas_contact:
                     # Si le croisement n'est pas présent, on l'ajoute à la liste
                     self.cross_set.add(cross)
-                if cross > eve:
-                    # Si le croisement est dans le futur, on l'ajoute aussi aux événements
-                    heapq.heappush(self.events, cross)
+                    if cross > eve:
+                        # Si le croisement est dans le futur, on l'ajoute aussi aux événements
+                        heapq.heappush(self.events, cross)
     # end def
 
 
@@ -235,7 +243,7 @@ def debug():
 # end def
 
 if __name__ == '__main__':
-    debug()
+    main()
 
 # tycat(segments)
 # TODO: merci de completer et de decommenter les lignes suivantes

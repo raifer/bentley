@@ -6,7 +6,7 @@ from geo.point import Point
 from geo.point import START, END, CROSS
 from geo.quadrant import Quadrant
 from geo.coordinates_hash import CoordinatesHash
-import y_cord
+import global_eve
 from math import inf
 from functools import total_ordering
 
@@ -42,7 +42,6 @@ class Segment:
         self.est_vertical = False
 
         if points[0].y == points[1].y:
-
             self.est_horizontal = True
             if points[0].x < points[1].x:
                 # On met les points dans le bon ordre.
@@ -70,7 +69,7 @@ class Segment:
         # On crée un angle None, il sera calculé à la volée si besoin.
         self.__angle__ = None
         self.__current_x__ = self.start.x
-        self.__current_y__ = y_cord.y
+        self.__current_y__ = self.start.y
         self.before_cross = False
 
     # end def
@@ -80,9 +79,12 @@ class Segment:
         if not self.est_horizontal:
             # Dans le cas d'un segment horizontal, on met à jour le x courant dès que y change
 
-            if y_cord.y != self.__current_y__:
-                self.__current_y__ = y_cord.y
+            if global_eve.eve.y != self.__current_y__:
+                self.__current_y__ = global_eve.eve.y
                 self.__current_x__ = self.start.x + self.pente * (self.__current_y__ - self.start.y)
+
+        else:
+            self.__current_x__ = global_eve.eve.x
 
         return self.__current_x__
 

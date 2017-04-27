@@ -4,9 +4,9 @@ points (any dimension).
 from math import sqrt
 from geo.quadrant import Quadrant
 
-CROSS = 0
-START = 1
-END = 2
+CROSS = 1
+START = 2
+END = 0
 
 
 class Point:
