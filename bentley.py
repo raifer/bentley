@@ -141,6 +141,7 @@ class Bentley(object):
         seg2.before_cross = False
 
         if abs(i1 - i2) != 1:
+            print(i1, i2)
             raise IOError("Les deux segments ne sont pas voisins.")
 
         # On inverse les positions des deux segments qui se croisent

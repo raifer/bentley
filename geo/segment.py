@@ -71,8 +71,6 @@ class Segment:
 
     def current_x(self, other):
 
-        print(self.before_cross, other.before_cross)
-
         if not self.est_horizontal:
             # Dans le cas d'un segment horizontal, on met à jour le x courant dès que y change
 
@@ -101,7 +99,6 @@ class Segment:
         x1 = self.current_x(other)
         x2 = other.current_x(self)
 
-        print(self.angle, other.angle)
         if abs(x1 - x2) > 0.000001:
             return x1 > x2
 
