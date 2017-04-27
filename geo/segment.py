@@ -75,7 +75,7 @@ class Segment:
 
     # end def
 
-    def current_x(self, other):
+    def current_x(self):
 
         if not self.est_horizontal:
             # Dans le cas d'un segment horizontal, on met à jour le x courant dès que y change
@@ -83,12 +83,6 @@ class Segment:
             if y_cord.y != self.__current_y__:
                 self.__current_y__ = y_cord.y
                 self.__current_x__ = self.start.x + self.pente * (self.__current_y__ - self.start.y)
-
-        else:
-            #  Dans le cas d'un segment horizontal, on met à jour le x courant à chaque intersection
-            if self.before_cross and other.before_cross:
-                if not other.est_horizontal:
-                    self.__current_x__ = other.current_x(self)
 
         return self.__current_x__
 
@@ -102,13 +96,13 @@ class Segment:
 
     def __gt__(self, other):
 
-        x1 = self.current_x(other)
-        x2 = other.current_x(self)
+        x1 = self.current_x()
+        x2 = other.current_x()
 
         if abs(x1 - x2) > 0.00000000000001:
             return x1 > x2
 
-        elif self.before_cross and other.before_cross:
+        elif self.before_cross or other.before_cross:
             return self.angle < other.angle
 
         else:
@@ -157,7 +151,7 @@ class Segment:
         i = self.line_intersection_with(other)
 
         if i is None:
-            return  # parallel lines
+            return None, None # parallel lines
 
         i = adjuster.hash_point(i)
 
@@ -170,6 +164,9 @@ class Segment:
                 return intersection, True
             else:
                 return intersection, False
+
+        else:
+            return None, None
 
     def line_intersection_with(self, other):
         """
