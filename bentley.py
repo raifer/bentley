@@ -65,7 +65,6 @@ class Bentley(object):
 
         # On rend le segment vivant.
         i = self.alive_segments.bisect(seg)
-        print("hmmm")
         self.alive_segments.insert(i, seg)
 
         # On recherche les croisement avec les nouveaux voisins. On regarde si les croisements trouvés sont dans la
