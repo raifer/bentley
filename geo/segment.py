@@ -74,6 +74,9 @@ class Segment:
 
     # end def
 
+    def tuple(self):
+        return self.start.x, self.start.y, self.end.x, self.end.y
+
     def current_x(self):
 
         if not self.est_horizontal:
@@ -103,6 +106,10 @@ class Segment:
 
         if abs(x1 - x2) > 0.00000000000001:
             return x1 > x2
+
+        elif (global_eve.eve.x - x1) > 0.00000000000001:
+            print("HIHIHI")
+            return self.angle < other.angle
 
         elif self.before_cross or other.before_cross:
             return self.angle < other.angle

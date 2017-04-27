@@ -1,0 +1,2 @@
+global eve
+eve = None

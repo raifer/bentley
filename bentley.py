@@ -56,12 +56,21 @@ class Bentley(object):
             # On apelle une des trois fonction selon le type d'évènement.
             try:
                 self.compute_event[eve.type_eve](eve)
+
+                #tycat(self.segments, self.cross_set)
+                #hop = input()
+
             except:
-                print("Unexpected error", sys.exc_info()[0])
-                #tycat(eve.l_segments)
-                tycat(self.segments)
-                print("SETS", self.cross_set_complet - self.cross_set)
-                #tycat(self.alive_segments)
+                #tycat(list(self.alive_segments), eve.l_segments, self.cross_set, eve
+                #print("Unexpected error", sys.exc_info()[0])
+                #tycat(list(self.alive_segments), eve.l_segments, self.cross_set, eve)
+                # liste = list(self.alive_segments)
+                # i0 = liste.index(eve.l_segments[0])
+                # liste_autour = liste[i0-4:i0+4]
+                # print("\n \nsegments autours\n", [segment.tuple() for segment in liste_autour])
+                # print("\nsegments incriminés\n\n", eve.l_segments)
+                # tycat(self.alive_segments)
+                # tycat(self.segments, self.cross_set)
 
                 raise
             # print(self.alive_segments)
@@ -234,7 +243,10 @@ def main():
 
 
 def debug():
-    bentley = Bentley(segments=[(5.0, 4.9, 5.0, 5.0), (7.0, 3.0, 5.0, 5.0), (2.0,2.0,5.0,5.0)])
+    #(0.5672739207285618, 0.7182803253299785, 0.7333192810734472, 0.7770742917103786)
+    bentley = Bentley(segments= [(0.5672739207285618, 0.7182803253299785, 0.7333192810734472, 0.7770742917103786), (0.7074891581491014, 0.6981912444861718, 0.10673992991458858, 0.8114906491821592), (0.9840143922321702, 0.6943102897392419, 0.009919246712381646, 0.7970903679299115), (0.39331531337700265, 0.4954681370369596, 0.7588674049822455, 0.7513571983471277)])
+
+
     tycat(bentley.segments)
     segments, intersections = bentley.run()
     tycat(segments, intersections)
