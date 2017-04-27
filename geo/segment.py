@@ -39,6 +39,7 @@ class Segment:
 
         self.endpoints = points
         self.est_horizontal = False
+        self.est_vertical = False
 
         if points[0].y == points[1].y:
 
@@ -47,6 +48,11 @@ class Segment:
                 # On met les points dans le bon ordre.
                 points.reverse()
                 # end if
+
+        elif points[0].x == points[1].x:
+            self.est_vertical = True
+            self.pente = 0
+
         else:
             self.pente = (self.end.x - self.start.x) / (self.end.y - self.start.y)
 
@@ -99,7 +105,7 @@ class Segment:
         x1 = self.current_x(other)
         x2 = other.current_x(self)
 
-        if abs(x1 - x2) > 0.000001:
+        if abs(x1 - x2) > 0.00000000000001:
             return x1 > x2
 
         elif self.before_cross and other.before_cross:
@@ -143,20 +149,27 @@ class Segment:
             *self.endpoints[0].coordinates,
             *self.endpoints[1].coordinates)
 
-    def intersection_with(self, other):
+    def intersection_with(self, other, adjuster):
         """
         intersect two 2d segments.
         only return point if included on the two segments.
         """
         i = self.line_intersection_with(other)
+
         if i is None:
             return  # parallel lines
 
+        i = adjuster.hash_point(i)
+
         if self.contains(i) and other.contains(i):
+
             # On crée un Point de type CROSS
             intersection = Point(i.coordinates, type_eve=CROSS)
             intersection.l_segments = [self, other]
-            return intersection
+            if i not in self.endpoints and i not in other.endpoints:
+                return intersection, True
+            else:
+                return intersection, False
 
     def line_intersection_with(self, other):
         """
@@ -206,7 +219,7 @@ class Segment:
                repr(self.endpoints[1]) + "])"
 
 
-def load_segments(filename):
+def load_segments(filename=None, segments_de_base=None):
     """
     loads given .bo file.
     returns a vector of segments.
@@ -215,14 +228,25 @@ def load_segments(filename):
     segments = []
     adjuster = CoordinatesHash()
 
-    with open(filename, "rb") as bo_file:
-        packed_segment = bo_file.read(32)
-        while packed_segment:
-            coordinates = coordinates_struct.unpack(packed_segment)
+    if filename is not None:
+
+        with open(filename, "rb") as bo_file:
+            packed_segment = bo_file.read(32)
+            while packed_segment:
+                coordinates = coordinates_struct.unpack(packed_segment)
+                raw_points = [Point(coordinates[0:2]), Point(coordinates[2:])]
+                adjusted_points = [adjuster.hash_point(p) for p in raw_points]
+                segments.append(Segment(adjusted_points))
+                packed_segment = bo_file.read(32)
+
+    elif segments_de_base is not None:
+        for segment in segments_de_base:
+            coordinates = segment
             raw_points = [Point(coordinates[0:2]), Point(coordinates[2:])]
+            print(raw_points)
             adjusted_points = [adjuster.hash_point(p) for p in raw_points]
             segments.append(Segment(adjusted_points))
-            packed_segment = bo_file.read(32)
+
 
     return adjuster, segments
 

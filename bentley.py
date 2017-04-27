@@ -12,11 +12,14 @@ from geo.tycat import tycat
 
 
 class Bentley(object):
-    def __init__(self, filename):
+    def __init__(self, filename=None, segments=None):
         """Initialise les structures de l'algo"""
 
         # Chargement des segments et de l'ajusteur.
-        self.adjuster, self.segments = load_segments(filename)
+        if filename:
+            self.adjuster, self.segments = load_segments(filename=filename)
+        elif segments:
+            self.adjuster, self.segments = load_segments(segments_de_base=segments)
 
         # Initialisation des la liste des évènement dans un tas (heap).
         self.events = []
@@ -51,6 +54,8 @@ class Bentley(object):
             print("\nNew event : %s" % eve)
             # On apelle une des trois fonction selon le type d'évènement.
             self.compute_event[eve.type_eve](eve)
+
+            tycat(self.segments, self.cross_set)
             print(self.alive_segments)
             # end while
 
@@ -74,7 +79,7 @@ class Bentley(object):
         if i > 0:
             # Si le segment n'est pas tout à gauche, on cherche un croisement potentiel avec son voisin de gauche.
             segment_gauche = self.alive_segments[i - 1]
-            cross = seg.intersection_with(segment_gauche)
+            cross = seg.intersection_with(segment_gauche, self.adjuster)
 
             if cross and cross not in self.cross_set:
                 # Si le croisement n'est pas présent, on l'ajoute à la liste
@@ -86,9 +91,8 @@ class Bentley(object):
         if i < len(self.alive_segments) - 1:
             # De même avec le voisin de droite.
             segment_droite = self.alive_segments[i + 1]
-            cross = seg.intersection_with(segment_droite)
+            cross = seg.intersection_with(segment_droite, self.adjuster)
             if cross and cross not in self.cross_set:
-                print(cross)
                 self.cross_set.add(cross)
                 if cross > eve:
                     heapq.heappush(self.events, cross)
@@ -97,6 +101,7 @@ class Bentley(object):
 
     def compute_end_event(self, eve):
         print("Compute event type END")
+
         seg = eve.l_segments[0]
         i = self.alive_segments.index(seg)
 
@@ -106,7 +111,7 @@ class Bentley(object):
             seg_gauche = self.alive_segments[i - 1]
             seg_droite = self.alive_segments[i + 1]
 
-            cross = seg_gauche.intersection_with(seg_droite)
+            cross = seg_gauche.intersection_with(seg_droite, self.adjuster)
             if cross and cross not in self.cross_set:
                 self.cross_set.add(cross)
                 if cross > eve:
@@ -141,7 +146,6 @@ class Bentley(object):
         seg2.before_cross = False
 
         if abs(i1 - i2) != 1:
-            print(i1, i2)
             raise IOError("Les deux segments ne sont pas voisins.")
 
         # On inverse les positions des deux segments qui se croisent
@@ -156,7 +160,7 @@ class Bentley(object):
 
         if i_gauche > 0:
             segment_gauche_gauche = self.alive_segments[i_gauche - 1]
-            cross = segment_gauche.intersection_with(segment_gauche_gauche)
+            cross = segment_gauche.intersection_with(segment_gauche_gauche, self.adjuster)
 
             if cross and cross not in self.cross_set:
                 self.cross_set.add(cross)
@@ -165,7 +169,7 @@ class Bentley(object):
 
         if i_droite < len(self.alive_segments) - 1:
             segment_droite_droite = self.alive_segments[i_droite + 1]
-            cross = segment_droite.intersection_with(segment_droite_droite)
+            cross = segment_droite.intersection_with(segment_droite_droite, self.adjuster)
 
             if cross and cross not in self.cross_set:
                 self.cross_set.add(cross)
@@ -189,6 +193,13 @@ def main():
         print(intersections)
         # end for
 
+
+def debug():
+    bentley = Bentley(segments=[(6.499999999999999, 2.7, 6.499999999999999, 3.5), (7.0, 3.0, 5.0, 5.0)])
+    tycat(bentley.segments)
+    segments, intersections = bentley.run()
+    tycat(segments, intersections)
+    print(intersections)
 
 # end def
 
