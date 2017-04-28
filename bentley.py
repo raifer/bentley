@@ -41,7 +41,7 @@ class Bentley(object):
 
         # Création du set des croisements.
         self.cross_set = set()
-        self.cross_set_complet = set() # Set contenant aussi les croisements de type "contact"
+        self.cross_set_complet = set()  # Set contenant aussi les croisements de type "contact"
 
     def run(self):
         while True:
@@ -50,20 +50,20 @@ class Bentley(object):
             except IndexError:
                 break
 
-                # On déplace la droite d'étude.
+            # On déplace la droite d'étude.
             global_eve.eve = eve
             print("\nNew event : %s" % eve)
             # On apelle une des trois fonction selon le type d'évènement.
             try:
                 self.compute_event[eve.type_eve](eve)
 
-                #tycat(self.segments, self.cross_set)
-                #hop = input()
+                # tycat(self.segments, self.cross_set)
+                # hop = input()
 
             except:
-                #tycat(list(self.alive_segments), eve.l_segments, self.cross_set, eve
-                #print("Unexpected error", sys.exc_info()[0])
-                #tycat(list(self.alive_segments), eve.l_segments, self.cross_set, eve)
+                # tycat(list(self.alive_segments), eve.l_segments, self.cross_set, eve
+                # print("Unexpected error", sys.exc_info()[0])
+                # tycat(list(self.alive_segments), eve.l_segments, self.cross_set, eve)
                 # liste = list(self.alive_segments)
                 # i0 = liste.index(eve.l_segments[0])
                 # liste_autour = liste[i0-4:i0+4]
@@ -73,57 +73,60 @@ class Bentley(object):
                 # tycat(self.segments, self.cross_set)
 
                 raise
-            # print(self.alive_segments)
-            # end while
+                # print(self.alive_segments)
+                # end while
 
         return self.segments, self.cross_set
 
     # end def
 
+    def traiter_croisement(self, cross, pas_contact, eve):
+        """
+        Traite le croisement "cross".
+        """
+
+        if cross and cross not in self.cross_set_complet:
+            # Si le croisement n'est pas présent dans la liste complète, on l'y ajoute.
+            self.cross_set_complet.add(cross)
+
+            if pas_contact:
+                # Si le croisement n'est pas un croisement de type "contact", on l'ajoute à la liste définitive.
+                self.cross_set.add(cross)
+
+                if cross > eve:
+                    # Si le croisement est dans le "futur" par rapport à l'événement courant,
+                    # on l'ajoute à la liste des événements.
+                    heapq.heappush(self.events, cross)
+
     def compute_start_event(self, eve):
+
         print("Compute event type START")
-        # Récupération du segment lié au point.
+
+        # Récupération du segment lié à l'événement.
         seg = eve.l_segments[0]
 
         # On rend le segment vivant.
         i = self.alive_segments.bisect(seg)
         self.alive_segments.insert(i, seg)
 
-        # On recherche les croisement avec les nouveaux voisins. On regarde si les croisements trouvés sont dans la
-        # cross_set Si oui, on met à jour la liste des segments dans le croisement., ce qui mettra à jour également
-        # l'évènement associé!
+        # On cherche les nouveaux croisements potentiels
 
         if i > 0:
             # Si le segment n'est pas tout à gauche, on cherche un croisement potentiel avec son voisin de gauche.
             segment_gauche = self.alive_segments[i - 1]
             cross, pas_contact = seg.intersection_with(segment_gauche, self.adjuster)
-
-            if cross and cross not in self.cross_set_complet:
-                self.cross_set_complet.add(cross)
-                if pas_contact:
-                    # Si le croisement n'est pas présent, on l'ajoute à la liste
-                    self.cross_set.add(cross)
-                    if cross > eve:
-                        # Si le croisement est dans le futur, on l'ajoute aussi aux événements
-                        heapq.heappush(self.events, cross)
+            self.traiter_croisement(cross, pas_contact, eve)
 
         if i < len(self.alive_segments) - 1:
             # De même avec le voisin de droite.
             segment_droite = self.alive_segments[i + 1]
             cross, pas_contact = seg.intersection_with(segment_droite, self.adjuster)
-
-            if cross and cross not in self.cross_set_complet:
-                self.cross_set_complet.add(cross)
-                if pas_contact:
-                    # Si le croisement n'est pas présent, on l'ajoute à la liste
-                    self.cross_set.add(cross)
-                    if cross > eve:
-                        # Si le croisement est dans le futur, on l'ajoute aussi aux événements
-                        heapq.heappush(self.events, cross)
+            self.traiter_croisement(cross, pas_contact, eve)
 
     # end def
 
     def compute_end_event(self, eve):
+
         print("Compute event type END")
 
         seg = eve.l_segments[0]
@@ -137,22 +140,16 @@ class Bentley(object):
 
         if 0 < i < len(self.alive_segments) - 1:
             # Si le segment qui se termine se trouvait entre deux segments, on cherche un croisement potentiel entre
-            # ces deux segments
+            #  ces deux segments
             seg_gauche = self.alive_segments[i - 1]
             seg_droite = self.alive_segments[i + 1]
 
             cross, pas_contact = seg_gauche.intersection_with(seg_droite, self.adjuster)
-            if cross and cross not in self.cross_set_complet:
-                self.cross_set_complet.add(cross)
-                if pas_contact:
-                    # Si le croisement n'est pas présent, on l'ajoute à la liste
-                    self.cross_set.add(cross)
-                    if cross > eve:
-                        # Si le croisement est dans le futur, on l'ajoute aussi aux événements
-                        heapq.heappush(self.events, cross)
+            self.traiter_croisement(cross, pas_contact, eve)
 
         # On retire le segment qui vient de se terminer de la liste des segments vivants
         self.alive_segments.pop(i)
+
     # end def
 
     def compute_cross_event(self, eve):
@@ -202,29 +199,12 @@ class Bentley(object):
         if i_gauche > 0:
             segment_gauche_gauche = self.alive_segments[i_gauche - 1]
             cross, pas_contact = segment_gauche.intersection_with(segment_gauche_gauche, self.adjuster)
-
-            if cross and cross not in self.cross_set_complet:
-                self.cross_set_complet.add(cross)
-                if pas_contact:
-                    # Si le croisement n'est pas présent, on l'ajoute à la liste
-                    self.cross_set.add(cross)
-                    if cross > eve:
-                        # Si le croisement est dans le futur, on l'ajoute aussi aux événements
-                        heapq.heappush(self.events, cross)
+            self.traiter_croisement(cross, pas_contact, eve)
 
         if i_droite < len(self.alive_segments) - 1:
             segment_droite_droite = self.alive_segments[i_droite + 1]
             cross, pas_contact = segment_droite.intersection_with(segment_droite_droite, self.adjuster)
-
-            if cross and cross not in self.cross_set_complet:
-                self.cross_set_complet.add(cross)
-                if pas_contact:
-                    # Si le croisement n'est pas présent, on l'ajoute à la liste
-                    self.cross_set.add(cross)
-                    if cross > eve:
-                        # Si le croisement est dans le futur, on l'ajoute aussi aux événements
-                        heapq.heappush(self.events, cross)
-    # end def
+            self.traiter_croisement(cross, pas_contact, eve)
 
 
 # end class
@@ -243,25 +223,19 @@ def main():
 
 
 def debug():
-    #(0.5672739207285618, 0.7182803253299785, 0.7333192810734472, 0.7770742917103786)
-    bentley = Bentley(segments= [(0.5672739207285618, 0.7182803253299785, 0.7333192810734472, 0.7770742917103786), (0.7074891581491014, 0.6981912444861718, 0.10673992991458858, 0.8114906491821592), (0.9840143922321702, 0.6943102897392419, 0.009919246712381646, 0.7970903679299115), (0.39331531337700265, 0.4954681370369596, 0.7588674049822455, 0.7513571983471277)])
-
+    # (0.5672739207285618, 0.7182803253299785, 0.7333192810734472, 0.7770742917103786)
+    bentley = Bentley(segments=[(0.5672739207285618, 0.7182803253299785, 0.7333192810734472, 0.7770742917103786),
+                                (0.7074891581491014, 0.6981912444861718, 0.10673992991458858, 0.8114906491821592),
+                                (0.9840143922321702, 0.6943102897392419, 0.009919246712381646, 0.7970903679299115),
+                                (0.39331531337700265, 0.4954681370369596, 0.7588674049822455, 0.7513571983471277)])
 
     tycat(bentley.segments)
     segments, intersections = bentley.run()
     tycat(segments, intersections)
     print(intersections)
 
+
 # end def
 
 if __name__ == '__main__':
-    main()
-
-# tycat(segments)
-# TODO: merci de completer et de decommenter les lignes suivantes
-# results = lancer bentley ottmann sur les segments et l'ajusteur
-# ...
-# tycat(segments, intersections)
-# print("le nombre d'intersections (= le nombre de points differents) est", ...)
-# print("le nombre de coupes dans les segments (si un point d'intersection apparait dans
-# plusieurs segments, il compte plusieurs fois) est", ...)
+    debug()

@@ -39,7 +39,6 @@ class Segment:
 
         self.endpoints = points
         self.est_horizontal = False
-        self.est_vertical = False
 
         if points[0].y == points[1].y:
             self.est_horizontal = True
@@ -49,7 +48,6 @@ class Segment:
                 # end if
 
         elif points[0].x == points[1].x:
-            self.est_vertical = True
             self.pente = 0
 
         else:
@@ -107,10 +105,6 @@ class Segment:
         if abs(x1 - x2) > 0.00000000000001:
             return x1 > x2
 
-        elif (global_eve.eve.x - x1) > 0.00000000000001:
-            print("HIHIHI")
-            return self.angle < other.angle
-
         elif self.before_cross or other.before_cross:
             return self.angle < other.angle
 
@@ -160,7 +154,7 @@ class Segment:
         i = self.line_intersection_with(other)
 
         if i is None:
-            return None, None # parallel lines
+            return None, None  # parallel lines
 
         i = adjuster.hash_point(i)
 
@@ -207,6 +201,9 @@ class Segment:
 
     @property
     def angle(self):
+        """
+        Calcul l'"angle" du segment avec l'horizontal (en fait sa tangente).
+        """
         if not self.__angle__:
             if self.end.y != self.start.y:
                 self.__angle__ = (self.end.x - self.start.x) / float((self.end.y - self.start.y))
@@ -214,6 +211,7 @@ class Segment:
                 self.__angle__ = inf
             else:
                 self.__angle__ = -inf
+
         return self.__angle__
 
     def __str__(self):
@@ -253,9 +251,8 @@ def load_segments(filename=None, segments_de_base=None):
             adjusted_points = [adjuster.hash_point(p) for p in raw_points]
             segments.append(Segment(adjusted_points))
 
-
     return adjuster, segments
 
-
-# La ligne suivante définit automatiquement les méthodes de comparaisons (__eq__, __lt__, etc.) pour la classe Segment
+# La ligne suivante définit automatiquement les méthodes de comparaisons (__eq__, __lt__, etc.) pour la classe Segment,
+# à partir de sa méthode __gt__.
 Segment = total_ordering(Segment)

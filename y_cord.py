@@ -1,2 +1,0 @@
-global y
-y = None
