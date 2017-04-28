@@ -5,11 +5,13 @@
 
 ## Lancement de l'algorithme sur les fichiers testes bo.
 
-./bo.py <fichier bo>
+./bo.py [--no_graphic] <fichier bo>
 
 exemple : ./bo.py tests/random_100.bo
 
-### Sortie du programme 
+--no_graphic : cette option retire l'affichage en svg (à utiliser pour les tests de performance)
+
+### Sortie du programme
 
 ## Fichiers de l'archive
 

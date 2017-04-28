@@ -30,6 +30,7 @@ def main(filenames=[], no_graphic=False):
             tycat(bentley.segments)
 
         segments, intersections = bentley.run()
+        
         if not no_graphic:
             tycat(segments, intersections)
 

@@ -37,7 +37,7 @@ class Bentley(object):
         }  # end dict
 
         # Création de la liste des segments actifs triés par abscisse.
-        self.alive_segments = SortedList()
+        self.alive_segments = SortedList(load=1000)
 
         # Création du set des croisements.
         self.cross_set = set()

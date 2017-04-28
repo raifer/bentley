@@ -2,8 +2,39 @@
 % Mathieu Barbe et Balthazar Potet
 % 28/04/2017
 
+# Introduction
+Nous avons implémenté l'algorithme de Bentley-Ottmann en Python. Il fonctionne avec tous les fichiers de test fournis à l'exception de random_200.bo. Seuls les intersections "réelles" sont détectées, c'est-à-dire que nous ne prenons pas en compte les intersections où une extrémité de segment intervient.
+
 # Implémentation
-Nous avons implémenté l'algorithme de Bentley-Ottmann en Python. Il fonctionne avec tous les fichiers de test fournis à l'exception de random_200.bo. Seuls les intersections "réelles" sont détectée
+
+## Les segments actifs
+
+Les segments actif et leur ordonnancement prennent  une part majeur dans la complexité de l’algorithme. Nous avons pu le confirmer lors de nos tests de performance. C’est pourquoi le choix de la structure de donné fut important. Afin de trier les segments entre eux, une méthode __gt__ a été implémenté dans la class segment.
+
+Cette méthode sera surtout utilisé par la liste des segments actifs lors d’une recherche ou d’un ajout d’un élément.
+
+## Événements
+
+Les événements doivent-être ordonnés dans un ordre précis pour que l'algorithme se déroule correctement :
+
+* Inverse de l'ordonnée de l'événement;
+* abscisse de l'événement;
+* type END;
+* type CROSS;
+* type START.
+
+Nous avons considéré que chaque point pouvait être vu comme un événement. L'objet point a donc été modifié pour répondre à nos besoin:
+
+* Type d'événement :
+    - None : point classique, ce n'est pas un événement.
+    - START : Début d'un segment.
+    - END : Fin d'un segment.
+    - CROSS : Croisement entre deux segments.
+* Liste des segments concerné par l’événement.
+
+Afin de comparer les événement entre eux, nous avons ajouté une fonction \__gt__ (gretter than".
+Celle-ci sera principalement utilisé par le tas qui ordonnancera les événements.
+
 
 # Structures de données
 L'algorithme nécessite de stocker trois types de données : les segments en vie, les événements à traiter et les intersections trouvées. Les structures de données utilisées pour stocker ces données influencent fortement les performances de l'algorithme, et doivent donc être choisies avec soin.
