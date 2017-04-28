@@ -2,6 +2,9 @@
 % Mathieu Barbe et Balthazar Potet
 % 28/04/2017
 
+# Implémentation
+Nous avons implémenté l'algorithme de Bentley-Ottmann en Python. Il fonctionne avec tous les fichiers de test fournis à l'exception de random_200.bo. Seuls les intersections "réelles" sont détectée
+
 # Structures de données
 L'algorithme nécessite de stocker trois types de données : les segments en vie, les événements à traiter et les intersections trouvées. Les structures de données utilisées pour stocker ces données influencent fortement les performances de l'algorithme, et doivent donc être choisies avec soin.
 
