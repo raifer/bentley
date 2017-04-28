@@ -12,18 +12,17 @@ from geo.tycat import tycat
 from bentley import Bentley
 
 
-def main():
+def main(filenames=[], no_graphic=False):
     """
     launch test on each file.
     """
     debut_arg = 1
-    no_graphic = False
 
     if sys.argv[1:] and sys.argv[1] == "--no_graphic":
         no_graphic = True
         debut_arg += 1
 
-    for filename in sys.argv[debut_arg:]:
+    for filename in filenames + sys.argv[debut_arg:]:
 
         bentley = Bentley(filename)
 

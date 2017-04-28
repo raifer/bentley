@@ -35,7 +35,6 @@ class Segment:
         """
         create a segment from an array of two points.
         """
-        print(points)
 
 
         self.adjuster = adjuster
@@ -257,7 +256,6 @@ def load_segments(filename=None, segments_de_base=None):
         for segment in segments_de_base:
             coordinates = segment
             raw_points = [Point(coordinates[0:2]), Point(coordinates[2:])]
-            print(raw_points)
             adjusted_points = [adjuster.hash_point(p) for p in raw_points]
             segments.append(Segment(adjusted_points, adjuster))
 

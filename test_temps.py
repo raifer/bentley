@@ -1,15 +1,25 @@
+#!/usr/bin/env python3
+import sys
+import bo
 import pstats
-import cProfile
-from bentley import Bentley
+from time import time
 
 def temps_moyen(filename, nb_iterations):
+    times = []
 
-    for _ in range(nb_iterations):
-        cProfile.run('./bo.py '+'--nographic filename', filename+'stat')
-        p = pstats.Stats(filename+'_stat')
+    for i in range(nb_iterations):
+        print(i)
+        t1 = time()
+        bo.main([filename], True)
+        t2 = time()
+        times.append(t2 - t1)
+
+    return sum(times)/nb_iterations
+
+def main():
+    for filename in sys.argv[1:]:
+        print(temps_moyen(filename, 1))
 
 
-p = pstats.Stats('output_carnifex')
-p.strip_dirs()
-p.sort_stats('time')
-p.print_stats()
+if __name__ == '__main__':
+    main()
