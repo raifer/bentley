@@ -52,29 +52,9 @@ class Bentley(object):
 
             # On déplace la droite d'étude.
             global_eve.eve = eve
-            print("\nNew event : %s" % eve)
+            # print("\nNew event : %s" % eve)
             # On apelle une des trois fonction selon le type d'évènement.
-            try:
-                self.compute_event[eve.type_eve](eve)
-                l = list(self.alive_segments)
-                # tycat(self.segments, self.cross_set)
-                # hop = input()
-
-            except:
-                print([segment.tuple() for segment in eve.l_segments])
-                raise
-                # print("Unexpected error", sys.exc_info()[0])
-                # tycat(list(self.alive_segments), eve.l_segments, self.cross_set, eve)
-                # liste = list(self.alive_segments)
-                # i0 = liste.index(eve.l_segments[0])
-                # liste_autour = liste[i0-4:i0+4]
-                # print("\n \nsegments autours\n", [segment.tuple() for segment in liste_autour])
-                # print("\nsegments incriminés\n\n", eve.l_segments)
-                # tycat(self.alive_segments)
-                # tycat(self.segments, self.cross_set)
-
-                # print(self.alive_segments)
-                # end while
+            self.compute_event[eve.type_eve](eve)
 
         return self.segments, self.cross_set
 
@@ -100,7 +80,7 @@ class Bentley(object):
 
     def compute_start_event(self, eve):
 
-        print("Compute event type START")
+        # print("Compute event type START")
 
         # Récupération du segment lié à l'événement.
         seg = eve.l_segments[0]
@@ -127,7 +107,7 @@ class Bentley(object):
 
     def compute_end_event(self, eve):
 
-        print("Compute event type END")
+        # print("Compute event type END")
 
         seg = eve.l_segments[0]
 
@@ -154,16 +134,16 @@ class Bentley(object):
 
     def compute_cross_event(self, eve):
 
-        print("Compute event type CROSS")
+        # print("Compute event type CROSS")
 
         # On récupère les deux segments qui se croisent à partir de l'événement.
         seg1 = eve.l_segments[0]
         seg2 = eve.l_segments[1]
 
-        if seg1.est_horizontal:
-            seg1.__current_x__ = eve.x
-        if seg2.est_horizontal:
-            seg2.__current_x__ = eve.x
+        seg1.__current_y__ = eve.y
+        seg2.__current_y__ = eve.y
+        seg1.__current_x__ = eve.x
+        seg2.__current_x__ = eve.x
 
         # À ce moment-ci, la liste des segments vivants n'est pas ordonnée puisque les deux segments se croisant
         # n'ont pas encore été intervertis. Cela est problématique puisque l'on ne peut pas utiliser la fonction
@@ -212,11 +192,10 @@ def main():
     """
     for filename in sys.argv[1:]:
         bentley = Bentley(filename)
-        print("segments :", bentley.segments)
-        tycat(bentley.segments)
+        # print("segments :", bentley.segments)
+        #tycat(bentley.segments)
         segments, intersections = bentley.run()
-        tycat(segments, intersections)
-        print(intersections)
+        #tycat(segments, intersections)
         # end for
 
 
@@ -234,11 +213,10 @@ def debug():
 
     tycat(bentley.segments)
     segments, intersections = bentley.run()
-    tycat(segments, intersections)
-    print(intersections)
+    #tycat(segments, intersections)
 
 
 # end def
 
 if __name__ == '__main__':
-    debug()
+    main()

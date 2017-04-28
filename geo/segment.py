@@ -31,12 +31,14 @@ class Segment:
 
     """
 
-    def __init__(self, points):
+    def __init__(self, points, adjuster):
         """
         create a segment from an array of two points.
         """
         print(points)
 
+
+        self.adjuster = adjuster
         self.endpoints = points
         self.est_horizontal = False
 
@@ -87,6 +89,8 @@ class Segment:
         else:
             self.__current_x__ = global_eve.eve.x
 
+        # self.__current_x__, self.__current_y__ = self.adjuster.hash_point(Point((self.__current_x__, self.__current_y__))).coordinates
+
         return self.__current_x__
 
     @property
@@ -102,7 +106,7 @@ class Segment:
         x1 = self.current_x()
         x2 = other.current_x()
 
-        if abs(x1 - x2) > 0.00001:
+        if abs(x1 - x2) > 0.0000001:
             return x1 > x2
 
         elif (global_eve.eve.x - x1) > 0.1:
@@ -124,7 +128,7 @@ class Segment:
         return duplicate of given segment (no shared points with original,
         they are also copied).
         """
-        return Segment([p.copy() for p in self.endpoints])
+        return Segment([p.copy() for p in self.endpoints], self.adjuster)
 
     def length(self):
         """
@@ -246,7 +250,7 @@ def load_segments(filename=None, segments_de_base=None):
                 coordinates = coordinates_struct.unpack(packed_segment)
                 raw_points = [Point(coordinates[0:2]), Point(coordinates[2:])]
                 adjusted_points = [adjuster.hash_point(p) for p in raw_points]
-                segments.append(Segment(adjusted_points))
+                segments.append(Segment(adjusted_points, adjuster))
                 packed_segment = bo_file.read(32)
 
     elif segments_de_base is not None:
@@ -255,7 +259,7 @@ def load_segments(filename=None, segments_de_base=None):
             raw_points = [Point(coordinates[0:2]), Point(coordinates[2:])]
             print(raw_points)
             adjusted_points = [adjuster.hash_point(p) for p in raw_points]
-            segments.append(Segment(adjusted_points))
+            segments.append(Segment(adjusted_points, adjuster))
 
     return adjuster, segments
 
