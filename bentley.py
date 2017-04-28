@@ -61,7 +61,7 @@ class Bentley(object):
                 # hop = input()
 
             except:
-                # tycat(list(self.alive_segments), eve.l_segments, self.cross_set, eve
+                raise
                 # print("Unexpected error", sys.exc_info()[0])
                 # tycat(list(self.alive_segments), eve.l_segments, self.cross_set, eve)
                 # liste = list(self.alive_segments)
@@ -72,7 +72,6 @@ class Bentley(object):
                 # tycat(self.alive_segments)
                 # tycat(self.segments, self.cross_set)
 
-                raise
                 # print(self.alive_segments)
                 # end while
 
@@ -165,8 +164,6 @@ class Bentley(object):
         if seg2.est_horizontal:
             seg2.__current_x__ = eve.x
 
-        print(seg1, seg2)
-
         # À ce moment-ci, la liste des segments vivants n'est pas ordonnée puisque les deux segments se croisant
         # n'ont pas encore été intervertis. Cela est problématique puisque l'on ne peut pas utiliser la fonction
         # "index" avec une liste désordonnée. On utilise donc le booléen "before_cross" qui indiquent aux segments
@@ -238,4 +235,4 @@ def debug():
 # end def
 
 if __name__ == '__main__':
-    debug()
+    main()

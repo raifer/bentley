@@ -102,8 +102,14 @@ class Segment:
         x1 = self.current_x()
         x2 = other.current_x()
 
-        if abs(x1 - x2) > 0.00000000000001:
+        if abs(x1 - x2) > 0.00001:
             return x1 > x2
+
+        elif (global_eve.eve.x - x1) > 0.0000001:
+            return self.angle < other.angle
+
+        elif (x1 - global_eve.eve.x) > 0.0000001:
+            return self.angle > other.angle
 
         elif self.before_cross or other.before_cross:
             return self.angle < other.angle
