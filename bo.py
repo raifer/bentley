@@ -16,14 +16,23 @@ def main():
     """
     launch test on each file.
     """
-    for filename in sys.argv[1:]:
+    debut_arg = 1
+    no_graphic = False
+
+    if sys.argv[1:] and sys.argv[1] == "--no_graphic":
+        no_graphic = True
+        debut_arg += 1
+
+    for filename in sys.argv[debut_arg:]:
+
         bentley = Bentley(filename)
-        print("segments :", bentley.segments)
-        tycat(bentley.segments)
+
+        if not no_graphic:
+            tycat(bentley.segments)
+
         segments, intersections = bentley.run()
-        tycat(segments, intersections)
-        print("Nombre d'intersections :", len(intersections))
-        # end for
+        if not no_graphic:
+            tycat(segments, intersections)
 
 if __name__ == '__main__':
     main()

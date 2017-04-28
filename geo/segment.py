@@ -42,20 +42,20 @@ class Segment:
         self.endpoints = points
         self.est_horizontal = False
 
-        if points[0].y == points[1].y:
+        if points[0].coordinates[1] == points[1].coordinates[1]:
             self.est_horizontal = True
-            if points[0].x < points[1].x:
+            if points[0].coordinates[0] < points[1].coordinates[0]:
                 # On met les points dans le bon ordre.
                 points.reverse()
                 # end if
 
-        elif points[0].x == points[1].x:
+        elif points[0].coordinates[0] == points[1].coordinates[0]:
             self.pente = 0
 
         else:
-            self.pente = (self.end.x - self.start.x) / (self.end.y - self.start.y)
+            self.pente = (self.end.coordinates[0] - self.start.coordinates[0]) / (self.end.coordinates[1] - self.start.coordinates[1])
 
-        if points[0].y > points[1].y:
+        if points[0].coordinates[1] > points[1].coordinates[1]:
             # On met le segment dans le "bon sens"
             points[0], points[1] = points[1], points[0]
         # end if
@@ -68,26 +68,26 @@ class Segment:
         self.endpoints[1].l_segments = [self]
         # On crée un angle None, il sera calculé à la volée si besoin.
         self.__angle__ = None
-        self.__current_x__ = self.start.x
-        self.__current_y__ = self.start.y
+        self.__current_x__ = self.start.coordinates[0]
+        self.__current_y__ = self.start.coordinates[1]
         self.before_cross = False
 
     # end def
 
     def tuple(self):
-        return self.start.x, self.start.y, self.end.x, self.end.y
+        return self.start.coordinates[0], self.start.coordinates[1], self.end.coordinates[0], self.end.coordinates[1]
 
     def current_x(self):
 
         if not self.est_horizontal:
             # Dans le cas d'un segment horizontal, on met à jour le x courant dès que y change
 
-            if global_eve.eve.y != self.__current_y__:
-                self.__current_y__ = global_eve.eve.y
-                self.__current_x__ = self.start.x + self.pente * (self.__current_y__ - self.start.y)
+            if global_eve.eve.coordinates[1] != self.__current_y__:
+                self.__current_y__ = global_eve.eve.coordinates[1]
+                self.__current_x__ = self.start.coordinates[0] + self.pente * (self.__current_y__ - self.start.coordinates[1])
 
         else:
-            self.__current_x__ = global_eve.eve.x
+            self.__current_x__ = global_eve.eve.coordinates[0]
 
         # self.__current_x__, self.__current_y__ = self.adjuster.hash_point(Point((self.__current_x__, self.__current_y__))).coordinates
 
@@ -109,10 +109,10 @@ class Segment:
         if abs(x1 - x2) > 0.0000001:
             return x1 > x2
 
-        elif (global_eve.eve.x - x1) > 0.1:
+        elif (global_eve.eve.coordinates[0] - x1) > 0.1:
             return self.angle < other.angle
 
-        elif (x1 - global_eve.eve.x) > 0.1:
+        elif (x1 - global_eve.eve.coordinates[0]) > 0.1:
             return self.angle > other.angle
 
         elif self.before_cross or other.before_cross:
@@ -215,9 +215,9 @@ class Segment:
         Calcul l'"angle" (en réalité sa tangente) du segment avec l'horizontal.
         """
         if not self.__angle__:
-            if self.end.y != self.start.y:
-                self.__angle__ = (self.end.x - self.start.x) / float((self.end.y - self.start.y))
-            elif self.end.x > self.start.x:
+            if self.end.coordinates[1] != self.start.coordinates[1]:
+                self.__angle__ = (self.end.coordinates[0] - self.start.coordinates[0]) / float((self.end.coordinates[1] - self.start.coordinates[1]))
+            elif self.end.coordinates[0] > self.start.coordinates[0]:
                 self.__angle__ = inf
             else:
                 self.__angle__ = -inf

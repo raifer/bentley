@@ -112,7 +112,7 @@ class Bentley(object):
         seg = eve.l_segments[0]
 
         if seg.est_horizontal:
-            seg.__current_x__ = eve.x
+            seg.__current_x__ = eve.coordinates[0]
 
         seg.before_cross = True
         i = self.alive_segments.index(seg)
@@ -140,10 +140,10 @@ class Bentley(object):
         seg1 = eve.l_segments[0]
         seg2 = eve.l_segments[1]
 
-        seg1.__current_y__ = eve.y
-        seg2.__current_y__ = eve.y
-        seg1.__current_x__ = eve.x
-        seg2.__current_x__ = eve.x
+        seg1.__current_y__ = eve.coordinates[1]
+        seg2.__current_y__ = eve.coordinates[1]
+        seg1.__current_x__ = eve.coordinates[0]
+        seg2.__current_x__ = eve.coordinates[0]
 
         # À ce moment-ci, la liste des segments vivants n'est pas ordonnée puisque les deux segments se croisant
         # n'ont pas encore été intervertis. Cela est problématique puisque l'on ne peut pas utiliser la fonction
@@ -195,7 +195,7 @@ def main():
         # print("segments :", bentley.segments)
         #tycat(bentley.segments)
         segments, intersections = bentley.run()
-        #tycat(segments, intersections)
+        # tycat(segments, intersections)
         # end for
 
 
