@@ -91,11 +91,11 @@ class Point:
         Les plus petit événement sont exploités en premier.
         Les comparaisons de coordonnées sont faites à 0.000001 près pour tenir compte des erreurs d'arrondi."""
 
-        if self.y - other.y > 0.000000000001: return True
-        if other.y - self.y > 0.000000000001: return False
+        if self.y - other.y > 0.0000001: return True
+        if other.y - self.y > 0.0000001: return False
         # Si on est encore là, l'ordonnée est identique.
-        if other.x - self.x > 0.000000000001: return True
-        if self.x - other.x > 0.000000000001: return False
+        if other.x - self.x > 0.0000001: return True
+        if self.x - other.x > 0.0000001: return False
         # Si on est encore là, abcisse et ordonné identique
         if self.type_eve > other.type_eve: return True
         # Si on est encore là, les deux points on exactement la même priorité.

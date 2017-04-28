@@ -105,10 +105,10 @@ class Segment:
         if abs(x1 - x2) > 0.00001:
             return x1 > x2
 
-        elif (global_eve.eve.x - x1) > 0.0000001:
+        elif (global_eve.eve.x - x1) > 0.1:
             return self.angle < other.angle
 
-        elif (x1 - global_eve.eve.x) > 0.0000001:
+        elif (x1 - global_eve.eve.x) > 0.1:
             return self.angle > other.angle
 
         elif self.before_cross or other.before_cross:
@@ -208,7 +208,7 @@ class Segment:
     @property
     def angle(self):
         """
-        Calcul l'"angle" du segment avec l'horizontal (en fait sa tangente).
+        Calcul l'"angle" (en réalité sa tangente) du segment avec l'horizontal.
         """
         if not self.__angle__:
             if self.end.y != self.start.y:
