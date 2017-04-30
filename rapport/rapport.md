@@ -3,7 +3,11 @@
 % 28/04/2017
 
 # Introduction
-Nous avons implémenté l'algorithme de Bentley-Ottmann en Python. Il fonctionne avec tous les fichiers de test fournis à l'exception de random_200.bo. Seuls les intersections "réelles" sont détectées, c'est-à-dire que nous ne prenons pas en compte les intersections où une extrémité de segment intervient.
+
+Dans le but de détecter les intersections contenus dans un ensemble de segments, nous avons implémenté l'algorithme de Bentley-Ottmann à partir du langage de script Python.
+Celui-ci fonctionne avec presque l'ensemble des fichiers de test fournis à l'exception de random_200.bo qui nous pose quelques soucis d'imprécision.
+Nous avons fait le choix d'énumérer seulement les intersections "réelles", c'est-à-dire que nous ne prenons pas en compte les intersections où une extrémité de segment intervient. Mais vous pourrez trouver dans le code la liste de tout les contacts entre segments si nécessaire.
+Dans ce rapport, nous exposons quelques points importants de notre implémentation, le choix des structures de données, une études de l'éxécution de l'algorithme pour une optimisation et nous terminerons par des testes de performance.
 
 # Implémentation
 
