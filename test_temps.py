@@ -13,7 +13,7 @@ def temps_moyen(filename, nb_iterations):
     for i in range(nb_iterations):
         print(i)
         t1 = time()
-        bo.main([filename], True)
+        bo.main([filename], no_graphic=True)
         t2 = time()
         times.append(t2 - t1)
 

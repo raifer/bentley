@@ -97,7 +97,7 @@ class Segment:
         else:
             self._current_x = global_eve.eve.coordinates[0]
 
-        # self.__current_x__, self.__current_y__ = self.adjuster.hash_point(Point((self.__current_x__, self.__current_y__))).coordinates
+        # self._current_x, self._current_y = self.adjuster.hash_point(Point((self._current_x, self._current_y))).coordinates
 
         return self._current_x
 
