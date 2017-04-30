@@ -36,7 +36,6 @@ class Segment:
         create a segment from an array of two points.
         """
 
-
         self.adjuster = adjuster
         self.endpoints = points
         self.est_horizontal = False
@@ -46,51 +45,61 @@ class Segment:
             if points[0].coordinates[0] < points[1].coordinates[0]:
                 # On met les points dans le bon ordre.
                 points.reverse()
-                # end if
 
         elif points[0].coordinates[0] == points[1].coordinates[0]:
             self.pente = 0
 
         else:
-            self.pente = (self.end.coordinates[0] - self.start.coordinates[0]) / (self.end.coordinates[1] - self.start.coordinates[1])
+            self.pente = (self.end.coordinates[0] - self.start.coordinates[0]) / (
+            self.end.coordinates[1] - self.start.coordinates[1])
 
         if points[0].coordinates[1] > points[1].coordinates[1]:
             # On met le segment dans le "bon sens"
             points[0], points[1] = points[1], points[0]
-        # end if
+
         points[0].type_eve = START
         points[1].type_eve = END
 
-        # Ajout du pointeur sur le segment dans les points.
-        # Permet de remonter au segment à partir de l'eve.
+        # Les points du segment ont un pointeur vers le segment auquel ils appartiennent, cela permet de remonter au
+        # segment à partir d'un événement.
         self.endpoints[0].l_segments = [self]
         self.endpoints[1].l_segments = [self]
-        # On crée un angle None, il sera calculé à la volée si besoin.
-        self.__angle__ = None
-        self.__current_x__ = self.start.coordinates[0]
-        self.__current_y__ = self.start.coordinates[1]
+
+        # L'angle avec l'horizontal est initialisé à None, il sera calculé à la volée si besoin.
+        self._angle = None
+
+        # Ces coorodonnées sont mises à jour à chaque changement d'événement.
+        self._current_x = self.start.coordinates[0]
+        self._current_y = self.start.coordinates[1]
+
+        # Ce paramètre permet d'assurer que les comparaisons entre segments au niveau des intersections se font dans le
+        # bon sens.
         self.before_cross = False
 
-    # end def
-
     def tuple(self):
+        """
+        Renvoie le segment sous forme de tuple.
+        """
         return self.start.coordinates[0], self.start.coordinates[1], self.end.coordinates[0], self.end.coordinates[1]
 
     def current_x(self):
-
+        """
+        Renvoie l'abscisse du segment en fonction de l'événement actuel.
+        """
         if not self.est_horizontal:
             # Dans le cas d'un segment horizontal, on met à jour le x courant dès que y change
 
-            if global_eve.eve.coordinates[1] != self.__current_y__:
-                self.__current_y__ = global_eve.eve.coordinates[1]
-                self.__current_x__ = self.start.coordinates[0] + self.pente * (self.__current_y__ - self.start.coordinates[1])
+            if global_eve.eve.coordinates[1] != self._current_y:
+                self._current_y = global_eve.eve.coordinates[1]
+                self._current_x = self.start.coordinates[0] + self.pente * (
+                    self._current_y - self.start.coordinates[1])
 
         else:
-            self.__current_x__ = global_eve.eve.coordinates[0]
+            self._current_x = global_eve.eve.coordinates[0]
 
         # self.__current_x__, self.__current_y__ = self.adjuster.hash_point(Point((self.__current_x__, self.__current_y__))).coordinates
 
-        return self.__current_x__
+        return self._current_x
 
     @property
     def start(self):
@@ -101,25 +110,33 @@ class Segment:
         return self.endpoints[1]
 
     def __gt__(self, other):
+        """
+        Méthode de comparaison des segments, le résultat dépend de l'événement courant.
+        """
 
         x1 = self.current_x()
         x2 = other.current_x()
 
         if abs(x1 - x2) > 0.0000001:
+            # Les deux segments ne se croisent pas, on compare leurs abscisses courantes.
             return x1 > x2
 
         elif (global_eve.eve.coordinates[0] - x1) > 0.1:
+            # Les deux segments comparés se croisent, mais leur intersection sera traitée dans le futur.
             return self.angle < other.angle
 
         elif (x1 - global_eve.eve.coordinates[0]) > 0.1:
+            # Les deux segments comparés se croisent, mais leur intersection a déjà été traitée.
             return self.angle > other.angle
 
         elif self.before_cross or other.before_cross:
+            # Les deux segments comparés se croisent et leur intersection est en train d'être traitée; leurs positions
+            # dans la liste des segments vivant n'ont pas encore été échangées.
             return self.angle < other.angle
 
         else:
-            # Si les deux abscisses sont suffisamment proches, on est au niveau d'une intersection. On compare donc les
-            # angles.
+            # Les deux segments comparés se croisent et leur intersection est en train d'être traitée; leurs positions
+            # dans la liste des segments vivant ont été échangées.
             return self.angle > other.angle
 
     def copy(self):
@@ -213,15 +230,16 @@ class Segment:
         """
         Calcul l'"angle" (en réalité sa tangente) du segment avec l'horizontal.
         """
-        if not self.__angle__:
+        if not self._angle:
             if self.end.coordinates[1] != self.start.coordinates[1]:
-                self.__angle__ = (self.end.coordinates[0] - self.start.coordinates[0]) / float((self.end.coordinates[1] - self.start.coordinates[1]))
+                self._angle = (self.end.coordinates[0] - self.start.coordinates[0]) / float(
+                    (self.end.coordinates[1] - self.start.coordinates[1]))
             elif self.end.coordinates[0] > self.start.coordinates[0]:
-                self.__angle__ = inf
+                self._angle = inf
             else:
-                self.__angle__ = -inf
+                self._angle = -inf
 
-        return self.__angle__
+        return self._angle
 
     def __str__(self):
         return "Segment([" + str(self.endpoints[0]) + ", " + \
@@ -260,6 +278,7 @@ def load_segments(filename=None, segments_de_base=None):
             segments.append(Segment(adjusted_points, adjuster))
 
     return adjuster, segments
+
 
 # La ligne suivante définit automatiquement les méthodes de comparaisons (__eq__, __lt__, etc.) pour la classe Segment,
 # à partir de sa méthode __gt__.

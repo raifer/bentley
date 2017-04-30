@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 import sys
 import bo
-import pstats
 from time import time
 
+
 def temps_moyen(filename, nb_iterations):
+    """
+    Renvoie le temps moyen d'éxecution de l'algorithme sur filename.
+    """
     times = []
 
     for i in range(nb_iterations):
@@ -16,9 +19,10 @@ def temps_moyen(filename, nb_iterations):
 
     return sum(times)/nb_iterations
 
+
 def main():
     for filename in sys.argv[1:]:
-        print(temps_moyen(filename, 1))
+        print(temps_moyen(filename, 10))
 
 
 if __name__ == '__main__':

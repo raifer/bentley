@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import sys
 import heapq
 import global_eve
 from sortedcontainers import SortedList
@@ -12,6 +11,7 @@ from geo.tycat import tycat
 
 
 class Bentley(object):
+
     def __init__(self, filename=None, segments=None):
         """Initialise les structures de l'algo"""
 
@@ -185,20 +185,6 @@ class Bentley(object):
             self.traiter_croisement(cross, pas_contact, eve)
 
 
-# end class
-def main():
-    """
-    launch test on each file.
-    """
-    for filename in sys.argv[1:]:
-        bentley = Bentley(filename)
-        # print("segments :", bentley.segments)
-        #tycat(bentley.segments)
-        segments, intersections = bentley.run()
-        # tycat(segments, intersections)
-        # end for
-
-
 def debug():
     # (0.5672739207285618, 0.7182803253299785, 0.7333192810734472, 0.7770742917103786)
     # bentley = Bentley(segments=[(0.5672739207285618, 0.7182803253299785, 0.7333192810734472, 0.7770742917103786),
@@ -213,10 +199,4 @@ def debug():
 
     tycat(bentley.segments)
     segments, intersections = bentley.run()
-    #tycat(segments, intersections)
-
-
-# end def
-
-if __name__ == '__main__':
-    main()
+    tycat(segments, intersections)

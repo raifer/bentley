@@ -4,6 +4,7 @@ points (any dimension).
 from math import sqrt
 from geo.quadrant import Quadrant
 
+# On définit les différents types d'événements. Du plus prioritaire au moins prioritaire : END, CROSS puis START.
 CROSS = 1
 START = 2
 END = 0
@@ -30,6 +31,7 @@ class Point:
         """
         if l_segments is None:
             l_segments = []
+
         self.coordinates = coordinates
         self.type_eve = type_eve
         self.l_segments = l_segments
