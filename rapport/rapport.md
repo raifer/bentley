@@ -137,7 +137,8 @@ Ensuite, nous avonc comparé notre implémentations avec plusieurs variantes emp
 ## Algorithme naïf
 
 Il nous a semblé important de tester notre implémentation contre un algorithme naïf (implémenté dans naif.py) qui compare tous les couples de segments pour trouver des intersections.
-L'algorithme de Bentley-Ottman se révèle bien plus performant dès que le nombre de segments devient un peu conséquent.
+L'algorithme de Bentley-Ottman se révèle bien plus performant dès que le nombre de segments devient un peu conséquent (> 2000).
+![alt text](naifVSbentley.png "alt text")
 
 ## Table de hachage contre liste
 
