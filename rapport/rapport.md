@@ -24,20 +24,46 @@ Nous avons donc choisi d'utiliser une table de hachage, implémentée en python 
 
 * Type python : set
 * Nom de la variable : cross_set
+* Nous avons également une liste alternative pour stoquer tout type de contact entre segments
+* nom de la variable : cross_set_complet.
+* Complexité des opérations qui nous consernes, moyenne, pire cas
+    - x in set : O(1), O(n),
+    - add : O(1)
 
 ## Liste des événements
 
-Les événements sont les étapes de l'algorithme, ils doivent être traités dans un ordre précis (selon leur position et leur type). 
-De plus, de nouveaux événements sont créés en cours d'exécution et doivent être triés lors de leur insertion. Comme les événements doivent être traités dans l'ordre, nous n'avons besoin à chaque étape que de l'élément de plus grande priorité, et nous n'avons donc pas à faire de recherche sur un autre élément. La liste de priorité permet de faire chacune de ces opérations de manière efficace : insertion triée en O(log(n)) et suppression de l'élément de plus grande priorité en O(log(n)).
+Les événements représentent les étapes de l'algorithme, ils doivent être traités dans un ordre précis (selon leur position dans le plan et leur type). 
+De plus, de nouveaux événements sont créés en cours d'exécution et doivent être ajoutés à la liste et automatiquement triés. 
+Les événements seront traités dans l'ordre, nous n'avons donc besoin que de l'élément de plus grande priorité pour chaque étape .
+Finalement, nous n'avons pas besoin de faire des recherches sur les événements présents dans la liste.
 
-* Type python : heapq
-* Nom de la variable : events
+La liste de priorité ou tas, permet de faire chacune de ces opérations de manière efficace : insertion triée en O(log(n)) et suppression de l'élément de plus grande priorité en O(log(n)).
 
-## Stockage des segments en vie
-Les segments en vie sont les segments qui peuvent potentiellement se croiser entre eux. Il est important de connaître leur ordre (pour un y donné) afin de connaître les voisins d'un segment donné. De plus, des segments peuvent être ajoutés, retirés ou intervertis à chaque étape. Nous avons donc besoin de trouver rapidement la position d'un segment dans la structure de donnée. Un AVL fait ces opérations de manière efficace : insertion, recherche et suppression en O(log(n)).
+* Type python : heapq;
+* Nom de la variable : events;
+* complexité, pour un tas moyenne = pire cas : 
+    - put : 0(log2(n)),
+    - get : O(log2(n)).
+
+## Liste des segments actifs
+
+Les segments en vie à l'instant i où l'on traite l'événement eve_i sont les segments qui croisent la droite d'étude y = abscisse(eve_i).
+Dans cette structure, les segments présents doivent être triés dans le but de les comparer avec leurs voisins. 
+La difficulté réside dans le faite que pour un abscisse donné, l'ordre des segments peut-être différent, en revanche, entre deux événement triés, l'ordre ne doit pas varier.
+On précise que pour chaque étape de l'algorithme, des segments peuvent être ajoutés, retirés ou intervertis.
+Nous avons donc besoin de trouver rapidement la position d'un segment dans la structure de donnée. 
+
+Un AVL permet de conserver la liste des éléments triée et réalise les opérations de base de manière efficace : insertion, recherche et suppression en O(log(n)).
+En python, cette structure n'est pas très utilisée, en revanche, la SortedList, qui mixe une table de hachage et de simples listes triées est conseillée.
+ Ça complexité est asymptotiquement identique mais la constante est un peu plus grande dans le cas de la SortedList
 
 * Type python : SortedList
 * Nom de la variable : alive_segments
+
+La SortedList peut-être optimisée en précisant la taille de l'arbre avec le paramettre load.
+En efet, pour que cette structure de donné soit eficace, la longueur des liste utilisées en interne doit-être égale à la racine cubique de n.
+Nous avons pu lire qu'ils conseillent  de garder la valeur par défaut de 1000 qui fonctionne bien pour une taille allant de dix à dix millions d'élément.
+Nous avons quand même effectué des testes sur ce paramètre sans observer de gain significatif.
 
 # Implémentation
 
