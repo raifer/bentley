@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import sys
 import heapq
 import global_eve
 from sortedcontainers import SortedList
@@ -54,7 +53,11 @@ class Bentley(object):
             global_eve.eve = eve
             # print("\nNew event : %s" % eve)
             # On apelle une des trois fonction selon le type d'évènement.
-            self.compute_event[eve.type_eve](eve)
+            try:
+                self.compute_event[eve.type_eve](eve)
+            except:
+                print([segment.tuple() for segment in eve.l_segments])
+                raise
 
         return self.segments, self.cross_set
 
@@ -140,10 +143,10 @@ class Bentley(object):
         seg1 = eve.l_segments[0]
         seg2 = eve.l_segments[1]
 
-        seg1.__current_y__ = eve.coordinates[1]
-        seg2.__current_y__ = eve.coordinates[1]
-        seg1.__current_x__ = eve.coordinates[0]
-        seg2.__current_x__ = eve.coordinates[0]
+        seg1._current_y = eve.coordinates[1]
+        seg2._current_y = eve.coordinates[1]
+        seg1._current_x = eve.coordinates[0]
+        seg2._current_x = eve.coordinates[0]
 
         # À ce moment-ci, la liste des segments vivants n'est pas ordonnée puisque les deux segments se croisant
         # n'ont pas encore été intervertis. Cela est problématique puisque l'on ne peut pas utiliser la fonction
@@ -185,38 +188,15 @@ class Bentley(object):
             self.traiter_croisement(cross, pas_contact, eve)
 
 
-# end class
-def main():
-    """
-    launch test on each file.
-    """
-    for filename in sys.argv[1:]:
-        bentley = Bentley(filename)
-        # print("segments :", bentley.segments)
-        #tycat(bentley.segments)
-        segments, intersections = bentley.run()
-        # tycat(segments, intersections)
-        # end for
-
-
 def debug():
     # (0.5672739207285618, 0.7182803253299785, 0.7333192810734472, 0.7770742917103786)
-    # bentley = Bentley(segments=[(0.5672739207285618, 0.7182803253299785, 0.7333192810734472, 0.7770742917103786),
-    #                            (0.7074891581491014, 0.6981912444861718, 0.10673992991458858, 0.8114906491821592),
-    #                            (0.9840143922321702, 0.6943102897392419, 0.009919246712381646, 0.7970903679299115),
-    #                            (0.39331531337700265, 0.4954681370369596, 0.7588674049822455, 0.7513571983471277)])
-
-    bentley = Bentley(segments=[(0.7701383313628689, 0.20480899108307304, 0.25911642537902724, 0.2564417265801435),
-                                (0.46482496943983787, 0.16859057154450885, 0.3418595792271224, 0.8619300857711496),
-                                (0.4450940526630529, 0.40998325598724583, 0.6638934700860735, 0.8793699407979858),
-                                (0.1036983007133716, 0.006228021128404926, 0.5912890037236236, 0.5828847073249499)])
+    bentley = Bentley(segments=[(0.35314646274816175, 0.1674852195265304, 0.8013858978650779, 0.1692033407995721),
+                                (0.2910318378572154, 0.05290818567129363, 0.8542121576464576, 0.9529869122102181)])
 
     tycat(bentley.segments)
     segments, intersections = bentley.run()
-    #tycat(segments, intersections)
+    tycat(segments, intersections)
 
-
-# end def
 
 if __name__ == '__main__':
-    main()
+    debug()
