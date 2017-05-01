@@ -8,18 +8,19 @@ for each file:
     - print some statistics
 """
 import sys
+
+from alternatives.bentley_cross_list import BentleyCrossList
 from geo.tycat import tycat
-from bentley_cross_list import BentleyCrossList
 
 
-def main(filenames=None, no_graphic=False):
+def main(filenames=None, no_output=False):
     """
     launch test on each file.
     """
     debut_arg = 1
 
-    if sys.argv[1:] and sys.argv[1] == "--no_graphic":
-        no_graphic = True
+    if sys.argv[1:] and sys.argv[1] == "--no_output":
+        no_output = True
         debut_arg += 1
 
     if filenames is None:
@@ -29,12 +30,12 @@ def main(filenames=None, no_graphic=False):
 
         bentley = BentleyCrossList(filename)
 
-        if not no_graphic:
+        if not no_output:
             tycat(bentley.segments)
 
         segments, intersections = bentley.run()
 
-        if not no_graphic:
+        if not no_output:
             tycat(segments, intersections)
 
     return segments, intersections

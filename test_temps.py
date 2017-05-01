@@ -5,11 +5,11 @@ Plusieurs tests temporels. Doit être exécuté dans le dossier /bentley/ pour f
 """
 
 from time import time
+
 from matplotlib import pyplot
 
 import bo
-import bo_cross_list
-import naif
+from alternatives import bo_cross_list, naif
 
 FILENAMES = ["flat_simple.bo", "simple_three.bo", "triangle_0.8.bo", "triangle_b_1.0.bo", "carnifex_h_0.5.bo",
              "triangle_h_0.5.bo", "fin.bo", "random_100.bo", "simple.bo", "triangle_0.1.bo", "triangle_b_0.5.bo",
@@ -28,7 +28,7 @@ def temps_moyen_bo(filename, nb_iterations):
 
     for i in range(nb_iterations):
         t1 = time()
-        segments, intersections = bo.main([filename], no_graphic=True)
+        segments, intersections = bo.main([filename], no_output=True)
         t2 = time()
         times.append(t2 - t1)
 
@@ -49,7 +49,7 @@ def temps_moyen_bo_cross_list(filename, nb_iterations):
 
     for i in range(nb_iterations):
         t1 = time()
-        segments, intersections = bo_cross_list.main([filename], no_graphic=True)
+        segments, intersections = bo_cross_list.main([filename], no_output=True)
         t2 = time()
         times.append(t2 - t1)
 
@@ -69,7 +69,7 @@ def temps_moyen_naif(filename, nb_iterations):
 
     for i in range(nb_iterations):
         t1 = time()
-        segments, intersections = naif.main([filename], no_graphic=True)
+        segments, intersections = naif.main([filename], no_output=True)
         t2 = time()
         times.append(t2 - t1)
 

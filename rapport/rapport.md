@@ -4,29 +4,31 @@
 
 # Introduction
 
-Dans le but de détecter les intersections contenus dans un ensemble de segments, nous avons implémenté l'algorithme de Bentley-Ottmann à partir du langage de script Python.
-Celui-ci fonctionne avec presque l'ensemble des fichiers de test fournis à l'exception de random_200.bo qui nous pose quelques soucis d'imprécision.
+Dans le but de détecter les intersections contenus dans un ensemble de segments, nous avons implémenté l'algorithme de Bentley-Ottmann dans le langage de script Python.
+Celui-ci fonctionne avec l'ensemble des fichiers de tests fournis à l'exception de random_200.bo qui nous pose quelques soucis d'imprécision.
 Nous avons fait l'effort de bien structurer notre programme ainsi que de commenter notre code dans l'objectif d'optimiser notre effort et vous faciliter la tâche si vous désirez étudier notre implémentation en détail.
-Nous avons fait le choix d'énumérer seulement les intersections "réelles", c'est-à-dire que nous ne prenons pas en compte les intersections où une extrémité de segment intervient. Mais vous pourrez trouver dans le code la liste de tout les contacts entre segments si nécessaire.
-Dans la suite de ce rapport, nous exposons le choix des structures de données, quelques points importants de notre implémentation, une études de l'éxécution de l'algorithme pour une optimisation et nous terminerons par des testes de performance.
+
+Nous avons fait le choix d'énumérer seulement les intersections "réelles", c'est-à-dire que nous ne prenons pas en compte les intersections où une extrémité de segment intervient. Mais vous pourrez trouver dans le code la liste de tout les contacts entre segments si nécessaire (dans l'attribut cross_set_complet de la classe Bentley).
+
+Dans la suite de ce rapport, nous exposons le choix des structures de données, quelques points importants de notre implémentation, une études de l'exécution de l'algorithme pour une optimisation et nous terminerons par des tests de performance.
 
 # Structures de données
 
-L'algorithme nécessite de manipuler trois types de données : les segments en vie, les événements à traiter et les intersections découverttes.
-Le type de ces structures de données vont fortement influer sur la complexité de l'algorithme, et doivent donc être choisies avec soin.
+L'algorithme nécessite de manipuler trois types de données : les segments en vie, les événements à traiter et les intersections découvertes.
+Ces structures de données vont fortement influer sur la complexité de l'algorithme, et doivent donc être choisies avec soin.
 
 ## Liste des intersections
 
-Le but de l'algorithme est de découvrir les intersections entre les segments, nous devrons donc les stoquer dans une liste, celle-ci sera également utile pour savoir si un croisement à déjà été trouvé dans le passé.
-L'ordre des intersections trouvées n'a pas d'importance, cependant il est nécessaire de pouvoir vérifier rapidement la présence d'un élément.
+Le but de l'algorithme est de découvrir les intersections entre les segments, nous devrons donc les stocker dans une liste, celle-ci sera également utile pour savoir si un croisement à déjà été trouvé dans le passé.
+L'ordre des intersections trouvées n'a pas d'importance, cependant il nous faut pouvoir vérifier rapidement la présence d'un élément.
 C'est pourquoi une recherche efficace est nécessaire. 
 Nous avons donc choisi d'utiliser une table de hachage, implémentée en python par le type set().
 
 * Type python : set
 * Nom de la variable : cross_set
-* Nous avons également une liste alternative pour stoquer tout type de contact entre segments
+* Il existe également une liste alternative pour stocker tout type de contact entre segments
 * nom de la variable : cross_set_complet.
-* Complexité des opérations qui nous consernes, moyenne, pire cas
+* Complexité des opérations qui nous concernent, moyenne, pire cas
     - x in set : O(1), O(n),
     - add : O(1)
 
@@ -49,25 +51,28 @@ La liste de priorité ou tas, permet de faire chacune de ces opérations de mani
 
 Les segments en vie à l'instant i où l'on traite l'événement eve_i sont les segments qui croisent la droite d'étude y = abscisse(eve_i).
 Dans cette structure, les segments présents doivent être triés dans le but de les comparer avec leurs voisins. 
-La difficulté réside dans le faite que pour un abscisse donné, l'ordre des segments peut-être différent, en revanche, entre deux événement triés, l'ordre ne doit pas varier.
+La difficulté réside dans le fait que pour une abscisse donnée, l'ordre des segments peut être différent, en revanche, entre deux événement triés, l'ordre ne doit pas varier.
 On précise que pour chaque étape de l'algorithme, des segments peuvent être ajoutés, retirés ou intervertis.
-Nous avons donc besoin de trouver rapidement la position d'un segment dans la structure de donnée. 
+Nous avons donc besoin de trouver rapidement la position d'un segment dans la structure de données. 
+
 
 Un AVL permet de conserver la liste des éléments triée et réalise les opérations de base de manière efficace : insertion, recherche et suppression en O(log(n)).
 En python, cette structure n'est pas très utilisée, en revanche, la SortedList, qui mixe une table de hachage et de simples listes triées est conseillée.
- Ça complexité est asymptotiquement identique mais la constante est un peu plus grande dans le cas de la SortedList
+ Sa complexité est asymptotiquement identique mais la constante est un peu plus grande dans le cas de la SortedList.
+
 
 * Type python : SortedList
 * Nom de la variable : alive_segments
 
-La SortedList peut-être optimisée en précisant la taille de l'arbre avec le paramettre load.
-En efet, pour que cette structure de donné soit eficace, la longueur des liste utilisées en interne doit-être égale à la racine cubique de n.
-Nous avons pu lire qu'ils conseillent  de garder la valeur par défaut de 1000 qui fonctionne bien pour une taille allant de dix à dix millions d'élément.
-Nous avons quand même effectué des testes sur ce paramètre sans observer de gain significatif.
+
+La SortedList peut-être optimisée en précisant la taille de l'arbre avec le paramètre load.
+En effet, pour que cette structure de données soit eficace, la longueur des liste utilisées en interne doit être égale à la racine cubique de n.
+Nous avons pu lire qu'il est conseillé de garder la valeur par défaut de 1000 qui fonctionne bien pour une taille allant de dix à dix millions d'éléments.
+Nous avons quand même effectué des tests sur ce paramètre sans observer de gain significatif.
 
 # Implémentation
 
-Pour implémenter l'algorithme, nous avons créé une class Bentley qui prend en paramètres un nom de fichier "bo" ou directement une liste de segments. 
+Pour implémenter l'algorithme, nous avons créé une class Bentley qui prend en paramètre un nom de fichier "bo" ou directement une liste de segments. 
 Ce dernier paramètre nous aura permis d'isoler des erreurs et de les résoudres plus facilement. Voici les grandes étapes de notre implémentation :
 
 1. Chargement des segments dans une liste à partir de la méthode 'load_segments' 
@@ -146,12 +151,12 @@ Si un segment est isolé, son angle ne sera pas calculé.
     Nous avons noté que pour un segment donné, l'événement START sera prioritaire devant l'événement END.
     Si nous ajoutons au tas l'événement END avant l'événement START, l'arbre devra obligatoirement être modifier pour inversé au minimum ces deux événements.
     
-    étudions l'insertion de n segments dans le meilleur des cas (par exemple, n segments qui se suivent sur un axe verticale) :
+   Étudions l'insertion de n segments dans le meilleur des cas (par exemple, n segments qui se suivent sur un axe verticale) :
     
-    * Ajout de END avant START, il y aura n inversion dans l'arbre;
-    * START avant STOP : l'événement sera placé à la fin de l'arbre parfait et sera déjà à la bonne place.
+   * Ajout de END avant START, il y aura n inversion dans l'arbre;
+   * START avant STOP : l'événement sera placé à la fin de l'arbre parfait et sera déjà à la bonne place.
     
-    Si les segments sont plus ou moins ordonnés dans les fichiers bo, l'insertion des événements lors de l'initialisation peut être très rapide.  
+   Si les segments sont plus ou moins ordonnés dans les fichiers bo, l'insertion des événements lors de l'initialisation peut être très rapide.  
   
 # Performances temporelles
 
@@ -175,4 +180,6 @@ Le gains de performance obtenus avec la table de hachage sont évidents à parti
 * En bleu : les intersections sont stockées dans une table de hachage
 * En orange : les intersections sont stockées dans une liste
 
-## Liste de priorité contre arbre binaire de recherche
+## Liste de priorité contre liste triée
+
+Une liste triée fonctionne aussi pour 

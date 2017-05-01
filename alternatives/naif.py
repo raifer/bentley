@@ -26,14 +26,14 @@ def trouver_intersections(filename):
     return segments, cross_set
 
 
-def main(filenames=None, no_graphic=False):
+def main(filenames=None, no_output=False):
     """
     launch test on each file.
     """
     debut_arg = 1
 
-    if sys.argv[1:] and sys.argv[1] == "--no_graphic":
-        no_graphic = True
+    if sys.argv[1:] and sys.argv[1] == "--no_output":
+        no_output = True
         debut_arg += 1
 
     if filenames is None:
@@ -43,7 +43,7 @@ def main(filenames=None, no_graphic=False):
 
         segments, intersections = trouver_intersections(filename)
 
-        if not no_graphic:
+        if not no_output:
             tycat(segments)
             tycat(segments, intersections)
 

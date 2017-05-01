@@ -10,7 +10,7 @@ from geo.point import CROSS, START, END
 from geo.tycat import tycat
 
 
-class Bentley(object):
+class BentleySortedList(object):
     def __init__(self, filename=None, segments=None):
         """Initialise les structures de l'algo"""
 
@@ -21,7 +21,7 @@ class Bentley(object):
             self.adjuster, self.segments = load_segments(segments_de_base=segments)
 
         # Initialisation des la liste des évènement dans un tas (heap).
-        self.events = []
+        self.events = SortedList()
         for seg in self.segments:
             # Il est plus performant d'insérer les points de début de segment avant les points de fin
             heapq.heappush(self.events, seg.endpoints[0])
@@ -186,4 +186,3 @@ class Bentley(object):
             segment_droite_droite = self.alive_segments[i_droite + 1]
             cross, pas_contact = segment_droite.intersection_with(segment_droite_droite, self.adjuster)
             self.traiter_croisement(cross, pas_contact)
-
