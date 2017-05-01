@@ -126,13 +126,36 @@ Voici l'ordre que nous avons implémenté :
 * type START.
 
 
+# Optimisation et Étude d'exécution 
+
+Nous avons utilisé l'option cProfile pour analyser les performances temporelles de notre code afin d'identifier les fonctions consommant le plus de temps au total.
+Comme nous nous en doutions, la méthode \_\_gt__ de la classe Segment est appelée à de nombreuses reprises, nous nous somme donc concentrés sur son optimisation.
+
+## Optimisation sur le calcul des angles
+
+Comme les angles des segments ne sont calculés que dans l'optique d'être comparés deux à deux, nous nous somme afranchis de la tangente inverse.
+L'angle représente donc seulement le rapport hauteur / largeur du segment, ce qui nous permet de comparer les segments entre eux.
+ 
+Nous avons également fait l'hypothèse que l'angle d'un segment n'est utilisé que si le segment croise un de ces frères.
+L'angle est donc calculé à la demande et stoqué pour les prochaines lectures.
+Si un segment est isolé, son angle ne sera pas calculé.
+
+## Optimisation sur l'insertion des événement dans le tas
+
+  Lors de l'initialisation, pour chaque segment, deux événements sont créer (de type START et END) et ajoutés dans le tas 'events'.
+    Nous avons noté que pour un segment donné, l'événement START sera prioritaire devant l'événement END.
+    Si nous ajoutons au tas l'événement END avant l'événement START, l'arbre devra obligatoirement être modifier pour inversé au minimum ces deux événements.
+    
+    étudions l'insertion de n segments dans le meilleur des cas (par exemple, n segments qui se suivent sur un axe verticale) :
+    
+    * Ajout de END avant START, il y aura n inversion dans l'arbre;
+    * START avant STOP : l'événement sera placé à la fin de l'arbre parfait et sera déjà à la bonne place.
+    
+    Si les segments sont plus ou moins ordonnés dans les fichiers bo, l'insertion des événements lors de l'initialisation peut être très rapide.  
+  
 # Performances temporelles
 
-Nous avons utilisé l'option cProfile pour analyser les performances temporelles de notre code afin d'identifier les fonctions consommant le plus de temps au total. Nous avons ainsi remarqué 
-que la méthode \_\_gt__ de la classe Segment était appelée à de nombreuses reprises, nous nous somme donc concentrés sur son optimisation.
-
-
-Ensuite, nous avonc comparé notre implémentations avec plusieurs variantes employant différentes structures de données (et autrement identiques en tout point). Toutes les comparaisons sont effectuées avec time() et avec l'option --no_graphic; le code peut être consulté dans le module test_temps.py.
+Dans cette partie, nous avonc comparé notre implémentations avec plusieurs variantes employant différentes structures de données (et autrement identiques en tout point). Toutes les comparaisons sont effectuées avec time() et avec l'option --no_graphic; le code peut être consulté dans le module test_temps.py.
 
 ## Algorithme naïf
 
