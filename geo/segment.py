@@ -176,6 +176,7 @@ class Segment:
         """
         intersect two 2d segments.
         only return point if included on the two segments.
+        also return a boolean set to True if the point belongs to one of the segments' endpoints.
         """
         i = self.line_intersection_with(other)
 

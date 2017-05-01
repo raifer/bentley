@@ -48,7 +48,7 @@ Ce dernier paramètre nous aura permis d'isoler des erreurs et de les résoudres
 2. Création d'un couple d'événements, 'START' et 'END' pour chaque segment. Ceux-ci seront ajoutés au tas des événement 'events' qui s'occupera de les trier.
 3. Boucle principale sur les événements 'START', 'CROSS' et 'END'
     * Pour chaque événement, on met à jour une variable globale 'eve' qui contient l'événement en cours. Cette technique nous sera indispensable pour ordonner les segments actifs entre eux.
-    * On traite l'événement dans une des trois méthodes compute_*_event.
+    * On traite l'événement dans l'une des trois méthodes compute_*_event.
     * START
         - On récupère le segment concerné par cette événement,
         - On l'ajoute à la liste des segments actifs qui soccupera de le placer à la bonne place à l'aide de la méthode __gt__ de la class segment,
@@ -69,9 +69,9 @@ Ce dernier paramètre nous aura permis d'isoler des erreurs et de les résoudres
         - si l'on découvre une nouvelle intersection, on l'ajoute à la liste et on créer un nouvelle événement.
          
          
-         Voici quelques détails concernant les class utilisées dans notre implémentation .
+Voici quelques détails concernant les class utilisées dans notre implémentation .
          
-         ## Liste des segments actifs
+## Liste des segments actifs
 
 Les segments actif et leur ordonnancement prennent  une part majeur dans la complexité de l’algorithme. Nous avons pu le confirmer lors de nos tests de performance. C’est pourquoi le choix de la structure de donné fut important. Afin de trier les segments entre eux, une méthode __gt__ a été implémenté dans la class segment.
 Cette méthode sera en grande partie utilisée par la liste des segments actifs lors d’une recherche d'indice ou d'un ajout, nous avons donc porté un soin particulié à son écriture.
@@ -85,11 +85,11 @@ Nous avons considéré que chaque point pouvait être vu comme un événement. L
     - START : Début d'un segment,
     - END : Fin d'un segment,
     - CROSS : Croisement entre deux segments;
-* liste des segments concerné par l’événement. (Dans un premier temps nous avions pris en compte que plus de deux segments pouvaient se croiser en un seul point, mais se ne fut pas le cas);
-* méthode __gt__.
+* liste des segments concernés par l’événement. (Dans un premier temps nous avions pris en compte que plus de deux segments pouvaient se croiser en un seul point, mais ce ne fut pas le cas);
+* méthode \_\_gt__.
 
-Les événements doivent-être ordonnés dans un ordre rigoureu pour que l'algorithme se déroule correctement.
-Afin de réaliser cette comparaison, nous avons ajouté une fonction \__gt__ (gretter than" dans la class point.
+Les événements doivent-être ordonnés dans un ordre rigoureux pour que l'algorithme se déroule correctement.
+Afin de réaliser cette comparaison, nous avons ajouté une fonction \_\_gt__ ("greater than") dans la classe Point.
 Celle-ci sera principalement utilisé par le tas qui ordonnancera les événements lors de leur insertion.
 Voici l'ordre que nous avons implémenté :
 
@@ -101,4 +101,8 @@ Voici l'ordre que nous avons implémenté :
 
 
 # Performances temporelles
-Nous avons utilisé l'option cProfile pour analyser les performances temporelles de notre code afin d'identifier les fonctions consommant le plus de temps au total (notamment la méthode \__gt__ de la clase Segment) pour les optimiser. Les temps moyens sont mesurés à l'aide de time(). Tous les tests sont effectués avec l'option --no_graphic du script bo.py afin que l'affichage ne fausse pas les mesures.
+Nous avons utilisé l'option cProfile pour analyser les performances temporelles de notre code afin d'identifier les fonctions consommant le plus de temps au total. Nous avons ainsi remarqué 
+que la méthode \_\_gt__ de la classe Segment était appelée à de nombreuses reprises, nous nous somme donc concentrés sur son optimisation.
+
+## Comparaison avec l'algorithme naïf
+Les temps moyens sont mesurés à l'aide de time(). Tous les tests sont effectués avec l'option --no_graphic du script bo.py afin que l'affichage ne fausse pas les mesures.
