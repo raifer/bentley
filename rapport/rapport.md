@@ -12,7 +12,7 @@ Dans la suite de ce rapport, nous exposons le choix des structures de données, 
 
 # Structures de données
 
-L'algorithme nécessite de manipuller trois types de données : les segments en vie, les événements à traiter et les intersections découverttes.
+L'algorithme nécessite de manipuler trois types de données : les segments en vie, les événements à traiter et les intersections découverttes.
 Le type de ces structures de données vont fortement influer sur la complexité de l'algorithme, et doivent donc être choisies avec soin.
 
 ## Liste des intersections
@@ -78,8 +78,8 @@ Ce dernier paramètre nous aura permis d'isoler des erreurs et de les résoudres
     * START
         - On récupère le segment concerné par cette événement,
         - On l'ajoute à la liste des segments actifs qui soccupera de le placer à la bonne place à l'aide de la méthode __gt__ de la class segment,
-        - On recherche les croisements avec ces voisins.
-        - Si nouveau croisement, On l'ajoute à la liste des croisement et on créer un nouvelle événement.
+        - On recherche les croisements avec ses voisins.
+        - Si nouveau croisement, on l'ajoute à la liste des croisement et on crée un nouvel événement.
     * CROSS
         - On récupère les segments incriminés par le croisement,
         - Dans un premier temps, on se place avant le croisement, pour cela, on tag les segment 'befor_cross', Cette information sera utilisé lors de leurs comparaisons d'angle.
@@ -127,18 +127,27 @@ Voici l'ordre que nous avons implémenté :
 
 
 # Performances temporelles
+
 Nous avons utilisé l'option cProfile pour analyser les performances temporelles de notre code afin d'identifier les fonctions consommant le plus de temps au total. Nous avons ainsi remarqué 
 que la méthode \_\_gt__ de la classe Segment était appelée à de nombreuses reprises, nous nous somme donc concentrés sur son optimisation.
 
 
-Ensuite, nous avonc comparé notre implémentations avec plusieurs variantes employant différentes structures de données. Toutes les comparaisons sont effectuées avec time() et avec l'option --no_graphic; le code peut être consulté dans le module test_temps.py. 
+Ensuite, nous avonc comparé notre implémentations avec plusieurs variantes employant différentes structures de données (et autrement identiques en tout point). Toutes les comparaisons sont effectuées avec time() et avec l'option --no_graphic; le code peut être consulté dans le module test_temps.py.
 
 ## Algorithme naïf
-Il nous a semblé important de tester notre implémentation contre un algorithme naïf (implémenté dans naif.py)
+
+Il nous a semblé important de tester notre implémentation contre un algorithme naïf (implémenté dans naif.py) qui compare tous les couples de segments pour trouver des intersections.
+L'algorithme de Bentley-Ottman se révèle bien plus performant dès que le nombre de segments devient un peu conséquent.
 
 ## Table de hachage contre liste
 
+L'implémentation de l'algorithme dans bentley_cross_list.py utilise une liste pour stocker les intersections au lieu d'une table de hachage.
+Le gain de performance obtenu avec la table de hachage est évident à partir de 3000 segments.
+
 ![setVSlist]
+* En bleu : les intersections sont stockées dans une table de hachage
+* En orange : les intersections sont stockées dans une liste
 
-[setVSlist]: setVSliste.png
+[setVSlist]: setVSlist.png
 
+## Liste de priorité contre liste triée

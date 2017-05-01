@@ -103,7 +103,7 @@ def comparer(nb_iterations, *args):
 
 
 def main():
-    comparer(5, temps_moyen_bo, temps_moyen_bo_cross_list)
+    comparer(1, temps_moyen_bo, temps_moyen_naif)
 
 
 if __name__ == '__main__':
