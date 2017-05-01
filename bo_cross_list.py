@@ -9,7 +9,7 @@ for each file:
 """
 import sys
 from geo.tycat import tycat
-from bentley import Bentley
+from bentley_cross_list import BentleyCrossList
 
 
 def main(filenames=None, no_graphic=False):
@@ -27,17 +27,18 @@ def main(filenames=None, no_graphic=False):
 
     for filename in filenames + sys.argv[debut_arg:]:
 
-        bentley = Bentley(filename)
+        bentley = BentleyCrossList(filename)
 
         if not no_graphic:
             tycat(bentley.segments)
 
         segments, intersections = bentley.run()
-        
+
         if not no_graphic:
             tycat(segments, intersections)
 
     return segments, intersections
+
 
 if __name__ == '__main__':
     main()

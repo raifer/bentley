@@ -47,6 +47,8 @@ def main(filenames=None, no_graphic=False):
             tycat(segments)
             tycat(segments, intersections)
 
+    return segments, intersections
+
 if __name__ == '__main__':
     main()
 

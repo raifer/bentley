@@ -104,5 +104,15 @@ Voici l'ordre que nous avons implémenté :
 Nous avons utilisé l'option cProfile pour analyser les performances temporelles de notre code afin d'identifier les fonctions consommant le plus de temps au total. Nous avons ainsi remarqué 
 que la méthode \_\_gt__ de la classe Segment était appelée à de nombreuses reprises, nous nous somme donc concentrés sur son optimisation.
 
-## Comparaison avec l'algorithme naïf
-Les temps moyens sont mesurés à l'aide de time(). Tous les tests sont effectués avec l'option --no_graphic du script bo.py afin que l'affichage ne fausse pas les mesures.
+
+Ensuite, nous avonc comparé notre implémentations avec plusieurs variantes employant différentes structures de données. Toutes les comparaisons sont effectuées avec time() et avec l'option --no_graphic; le code peut être consulté dans le module test_temps.py. 
+
+## Algorithme naïf
+Il nous a semblé important de tester notre implémentation contre un algorithme naïf (implémenté dans naif.py)
+
+## Table de hachage contre liste
+
+![setVSlist]
+
+[setVSlist]: setVSliste.png
+
