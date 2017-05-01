@@ -126,13 +126,14 @@ Voici l'ordre que nous avons implémenté :
 * type START.
 
 
+# Optimisation et Étude d'exécution 
+
+Nous avons utilisé l'option cProfile pour analyser les performances temporelles de notre code afin d'identifier les fonctions consommant le plus de temps au total.
+Comme nous nous en doutions, la méthode \_\_gt__ de la classe Segment est appelée à de nombreuses reprises, nous nous somme donc concentrés sur son optimisation.
+
 # Performances temporelles
 
-Nous avons utilisé l'option cProfile pour analyser les performances temporelles de notre code afin d'identifier les fonctions consommant le plus de temps au total. Nous avons ainsi remarqué 
-que la méthode \_\_gt__ de la classe Segment était appelée à de nombreuses reprises, nous nous somme donc concentrés sur son optimisation.
-
-
-Ensuite, nous avonc comparé notre implémentations avec plusieurs variantes employant différentes structures de données (et autrement identiques en tout point). Toutes les comparaisons sont effectuées avec time() et avec l'option --no_graphic; le code peut être consulté dans le module test_temps.py.
+Dans cette partie, nous avonc comparé notre implémentations avec plusieurs variantes employant différentes structures de données (et autrement identiques en tout point). Toutes les comparaisons sont effectuées avec time() et avec l'option --no_graphic; le code peut être consulté dans le module test_temps.py.
 
 ## Algorithme naïf
 
