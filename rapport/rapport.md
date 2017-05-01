@@ -182,4 +182,4 @@ Le gains de performance obtenus avec la table de hachage sont évidents à parti
 
 ## Liste de priorité contre liste triée
 
-Une liste triée fonctionne aussi pour 
+Nous avons comparé une liste de priorité (heapq en python) avec une SortedList pour le stockage des événements. Bien que nous nous attendions à ce que la liste de priorité soit plus rapide, car l'accès à l'élément de priorité la plus élevée se fait en temps constant, nous n'avons pas mesuré de différences de performances notables.
