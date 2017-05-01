@@ -63,7 +63,7 @@ class Bentley(object):
 
     # end def
 
-    def traiter_croisement(self, cross, pas_contact, eve):
+    def traiter_croisement(self, cross, pas_contact):
         """
         Traite le croisement "cross".
         """
@@ -76,7 +76,7 @@ class Bentley(object):
                 # Si le croisement n'est pas un croisement de type "contact", on l'ajoute à la liste définitive.
                 self.cross_set.add(cross)
 
-                if cross > eve:
+                if cross > global_eve.eve:
                     # Si le croisement est dans le "futur" par rapport à l'événement courant,
                     # on l'ajoute à la liste des événements.
                     heapq.heappush(self.events, cross)
@@ -98,13 +98,13 @@ class Bentley(object):
             # Si le segment n'est pas tout à gauche, on cherche un croisement potentiel avec son voisin de gauche.
             segment_gauche = self.alive_segments[i - 1]
             cross, pas_contact = seg.intersection_with(segment_gauche, self.adjuster)
-            self.traiter_croisement(cross, pas_contact, eve)
+            self.traiter_croisement(cross, pas_contact)
 
         if i < len(self.alive_segments) - 1:
             # De même avec le voisin de droite.
             segment_droite = self.alive_segments[i + 1]
             cross, pas_contact = seg.intersection_with(segment_droite, self.adjuster)
-            self.traiter_croisement(cross, pas_contact, eve)
+            self.traiter_croisement(cross, pas_contact)
 
     # end def
 
@@ -128,7 +128,7 @@ class Bentley(object):
             seg_droite = self.alive_segments[i + 1]
 
             cross, pas_contact = seg_gauche.intersection_with(seg_droite, self.adjuster)
-            self.traiter_croisement(cross, pas_contact, eve)
+            self.traiter_croisement(cross, pas_contact)
 
         # On retire le segment qui vient de se terminer de la liste des segments vivants
         self.alive_segments.pop(i)
@@ -180,12 +180,12 @@ class Bentley(object):
         if i_gauche > 0:
             segment_gauche_gauche = self.alive_segments[i_gauche - 1]
             cross, pas_contact = segment_gauche.intersection_with(segment_gauche_gauche, self.adjuster)
-            self.traiter_croisement(cross, pas_contact, eve)
+            self.traiter_croisement(cross, pas_contact)
 
         if i_droite < len(self.alive_segments) - 1:
             segment_droite_droite = self.alive_segments[i_droite + 1]
             cross, pas_contact = segment_droite.intersection_with(segment_droite_droite, self.adjuster)
-            self.traiter_croisement(cross, pas_contact, eve)
+            self.traiter_croisement(cross, pas_contact)
 
 
 def debug():
