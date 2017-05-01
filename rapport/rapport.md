@@ -142,12 +142,10 @@ L'algorithme de Bentley-Ottman se révèle bien plus performant dès que le nomb
 ## Table de hachage contre liste
 
 L'implémentation de l'algorithme dans bentley_cross_list.py utilise une liste pour stocker les intersections au lieu d'une table de hachage.
-Le gain de performance obtenu avec la table de hachage est évident à partir de 3000 segments.
+Le gains de performance obtenus avec la table de hachage sont évidents à partir de 3000 segments.
+![alt text](setVSlist.png "alt text")
 
-![setVSlist]
 * En bleu : les intersections sont stockées dans une table de hachage
 * En orange : les intersections sont stockées dans une liste
 
-[setVSlist]: setVSlist.png
-
-## Liste de priorité contre liste triée
+## Liste de priorité contre arbre binaire de recherche
