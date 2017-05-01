@@ -131,6 +131,15 @@ Voici l'ordre que nous avons implémenté :
 Nous avons utilisé l'option cProfile pour analyser les performances temporelles de notre code afin d'identifier les fonctions consommant le plus de temps au total.
 Comme nous nous en doutions, la méthode \_\_gt__ de la classe Segment est appelée à de nombreuses reprises, nous nous somme donc concentrés sur son optimisation.
 
+## Optimisation sur le calcul des angles
+
+Comme les angles des segments ne sont calculés que dans l'optique d'être comparés deux à deux, nous nous somme afranchis de la tangente inverse.
+ L'angle représente donc seulement le rapport hauteur / largeur du segment, ce qui nous permet de comparer les segments entre eux.
+ 
+  Nous avons également fait l'hypothèse que l'angle d'un segment n'est utilisé que si le segment croise un de ces frères.
+  L'angle est donc calculé à la demande et stoqué pour les prochaines lectures.
+  Si un segment est isolé, son angle ne sera pas calculé.
+  
 # Performances temporelles
 
 Dans cette partie, nous avonc comparé notre implémentations avec plusieurs variantes employant différentes structures de données (et autrement identiques en tout point). Toutes les comparaisons sont effectuées avec time() et avec l'option --no_graphic; le code peut être consulté dans le module test_temps.py.
